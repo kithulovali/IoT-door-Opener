@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Door Access - User Portal</title>
+    <link rel="stylesheet" href="user-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <i class="fas fa-door-open"></i>
+                <span>Smart Door Access</span>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="globalSearch" placeholder="Search access history, notifications..." data-placeholder-en="Search access history, notifications..." data-placeholder-sw="Tafuta historia ya ufikiaji, arifa..." data-placeholder-fr="Rechercher l'historique d'accès, notifications...">
+                <button class="search-filter-btn" id="searchFilterBtn" title="Advanced search">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-info">
+                <span class="user-name" id="userName">User</span>
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="notificationsBtn" title="View notifications" aria-label="View notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">3</span>
+                </button>
+                <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle dark/light theme">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="icon-btn" id="languageToggle" title="Change language" aria-label="Change language">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Open settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#access" class="nav-item" data-section="access">
+                    <i class="fas fa-key"></i>
+                    <span>Door Access</span>
+                </a>
+                <a href="#history" class="nav-item" data-section="history">
+                    <i class="fas fa-history"></i>
+                    <span>Access History</span>
+                </a>
+                <a href="#profile" class="nav-item" data-section="profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#help" class="nav-item" data-section="help">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help & Support</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" id="quickAccessBtn">
+                            <i class="fas fa-door-open"></i>
+                            Quick Access
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Access Status Card -->
+                    <div class="card access-status-card">
+                        <div class="card-header">
+                            <h3>Current Access Status</h3>
+                            <div class="status-indicator" id="accessStatus">
+                                <span class="status-dot active"></span>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                <div class="access-info">
+                    <div class="info-item">
+                        <span class="label">Last Access:</span>
+                        <span class="value" id="lastAccess">Complete profile first</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Access Level:</span>
+                        <span class="value badge badge-warning" id="accessLevel">Pending</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Next Review:</span>
+                        <span class="value" id="nextReview">After profile completion</span>
+                    </div>
+                </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card stats-card">
+                        <div class="card-header">
+                            <h3>This Month</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="monthlyAccess">24</div>
+                                    <div class="stat-label">Access Attempts</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="successfulAccess">23</div>
+                                    <div class="stat-label">Successful</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="failedAccess">1</div>
+                                    <div class="stat-label">Failed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card activity-card">
+                        <div class="card-header">
+                            <h3>Recent Activity</h3>
+                            <a href="#history" class="view-all">View All</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="activity-list" id="recentActivity">
+                                <div class="activity-item">
+                                    <div class="activity-icon success">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Door Access Granted</div>
+                                        <div class="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info">
+                                        <i class="fas fa-info"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Profile Updated</div>
+                                        <div class="activity-time">1 day ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon success">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Door Access Granted</div>
+                                        <div class="activity-time">2 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="card notifications-card">
+                        <div class="card-header">
+                            <h3>Notifications</h3>
+                            <button class="btn btn-sm btn-secondary" id="markAllRead">Mark All Read</button>
+                        </div>
+                        <div class="card-content">
+                            <div class="notification-list" id="notificationList">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">Access Review Due</div>
+                                        <div class="notification-message">Your access will be reviewed in 5 days</div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-info"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">System Maintenance</div>
+                                        <div class="notification-message">Scheduled maintenance on Dec 10, 2024</div>
+                                        <div class="notification-time">1 day ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Door Access Section -->
+            <section id="access" class="content-section">
+                <div class="section-header">
+                    <h1>Door Access</h1>
+                    <p class="section-subtitle">Use face recognition to access the door</p>
+                </div>
+
+                <div class="access-container">
+                    <div class="access-card">
+                        <div class="access-header">
+                            <h3>Face Recognition Access</h3>
+                            <div class="access-status" id="doorStatus">
+                                <span class="status-dot"></span>
+                                <span>Ready</span>
+                            </div>
+                        </div>
+                        
+                        <div class="camera-container">
+                            <div class="camera-preview" id="cameraPreview">
+                                <div class="camera-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Camera not active</p>
+                                </div>
+                            </div>
+            <video id="videoStream" autoplay muted class="hidden"></video>
+            <canvas id="captureCanvas" class="hidden"></canvas>
+                        </div>
+
+                        <div class="access-controls">
+                            <button class="btn btn-primary btn-large" id="startCameraBtn">
+                                <i class="fas fa-camera"></i>
+                                Start Camera
+                            </button>
+                            <button class="btn btn-success btn-large" id="captureBtn" disabled>
+                                <i class="fas fa-capture"></i>
+                                Capture & Access
+                            </button>
+                            <button class="btn btn-secondary" id="stopCameraBtn" disabled>
+                                <i class="fas fa-stop"></i>
+                                Stop Camera
+                            </button>
+                        </div>
+
+                        <div class="access-result hidden" id="accessResult">
+                            <div class="result-content">
+                                <div class="result-icon" id="resultIcon"></div>
+                                <div class="result-message" id="resultMessage"></div>
+                                <div class="result-details" id="resultDetails"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="access-info-card">
+                        <h4>Access Instructions</h4>
+                        <ol class="instructions-list">
+                            <li>Click "Start Camera" to activate your device camera</li>
+                            <li>Position your face clearly in the camera view</li>
+                            <li>Click "Capture & Access" to take a photo and request access</li>
+                            <li>Wait for the system to verify your identity</li>
+                            <li>If successful, the door will unlock automatically</li>
+                        </ol>
+                        
+                        <div class="tips">
+                            <h5>Tips for better recognition:</h5>
+                            <ul>
+                                <li>Ensure good lighting on your face</li>
+                                <li>Look directly at the camera</li>
+                                <li>Remove sunglasses or face coverings</li>
+                                <li>Keep a neutral expression</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Access History Section -->
+            <section id="history" class="content-section">
+                <div class="section-header">
+                    <h1>Access History</h1>
+                    <div class="section-actions">
+                        <div class="filter-controls">
+                            <select id="dateFilter" class="filter-select" title="Filter by date" aria-label="Filter access history by date">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                            <select id="statusFilter" class="filter-select" title="Filter by status" aria-label="Filter access history by status">
+                                <option value="all">All Status</option>
+                                <option value="success">Successful</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                        <div class="export-dropdown">
+                            <button class="btn btn-secondary" id="exportBtn">
+                                <i class="fas fa-download"></i>
+                                <span data-text-en="Export" data-text-sw="Hamisha" data-text-fr="Exporter">Export</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="export-menu" id="exportMenu">
+                                <button class="export-option" data-format="pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span data-text-en="Export as PDF" data-text-sw="Hamisha kama PDF" data-text-fr="Exporter en PDF">Export as PDF</span>
+                                </button>
+                                <button class="export-option" data-format="excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    <span data-text-en="Export as Excel" data-text-sw="Hamisha kama Excel" data-text-fr="Exporter en Excel">Export as Excel</span>
+                                </button>
+                                <button class="export-option" data-format="csv">
+                                    <i class="fas fa-file-csv"></i>
+                                    <span data-text-en="Export as CSV" data-text-sw="Hamisha kama CSV" data-text-fr="Exporter en CSV">Export as CSV</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-container">
+                    <div class="history-table-container">
+                        <table class="history-table" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                    <th>Confidence</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- History data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination" id="historyPagination">
+                        <button class="btn btn-sm btn-secondary" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <div class="page-numbers" id="pageNumbers">
+                            <span class="page-number active">1</span>
+                            <span class="page-number">2</span>
+                            <span class="page-number">3</span>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" id="nextPage">
+                            Next
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <div class="section-header">
+                    <h1>Profile Settings</h1>
+                </div>
+
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar-large" id="profileAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="profile-info">
+                                <h3 id="profileName">User</h3>
+                                <p id="profileEmail">user@example.com</p>
+                                <span class="badge badge-success" id="profileStatus">Active</span>
+                            </div>
+                            <button class="btn btn-secondary" id="changePhotoBtn">
+                                <i class="fas fa-camera"></i>
+                                Change Photo
+                            </button>
+                        </div>
+
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" value="" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" value="" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" value="" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" value="">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <input type="text" id="department" name="department" value="">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="employeeId">Employee ID</label>
+                                <input type="text" id="employeeId" name="employeeId" value="" readonly>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="resetForm">
+                                    <i class="fas fa-undo"></i>
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="security-card">
+                        <h3>Security Settings</h3>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4>Change Password</h4>
+                                <p>Update your account password</p>
+                            </div>
+                            <button class="btn btn-secondary" id="changePasswordBtn">
+                                Change Password
+                            </button>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4>Two-Factor Authentication</h4>
+                                <p>Add an extra layer of security</p>
+                            </div>
+                            <button class="btn btn-secondary" id="setup2FABtn">
+                                Setup 2FA
+                            </button>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4>Face Recognition Data</h4>
+                                <p>Manage your biometric data</p>
+                            </div>
+                            <button class="btn btn-secondary" id="manageBiometricBtn">
+                                Manage Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Section -->
+            <section id="help" class="content-section">
+                <div class="section-header">
+                    <h1>Help & Support</h1>
+                </div>
+
+                <div class="help-container">
+                    <div class="help-cards">
+                        <div class="help-card">
+                            <div class="help-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <h3>Frequently Asked Questions</h3>
+                            <p>Find answers to common questions about the door access system</p>
+                            <button class="btn btn-primary">View FAQ</button>
+                        </div>
+                        
+                        <div class="help-card">
+                            <div class="help-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3>User Guide</h3>
+                            <p>Comprehensive guide on how to use the system</p>
+                            <button class="btn btn-primary">Read Guide</button>
+                        </div>
+                        
+                        <div class="help-card">
+                            <div class="help-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h3>Contact Support</h3>
+                            <p>Get help from our support team</p>
+                            <button class="btn btn-primary">Contact Us</button>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>group2@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>0761365727</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Fri: 9:00 AM - 6:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Notifications</h3>
+                <button class="modal-close" id="closeNotificationModal" title="Close notifications" aria-label="Close notifications modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationModalBody">
+                <!-- Notifications will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Password</h3>
+                <button class="modal-close" id="closePasswordModal" title="Close password change" aria-label="Close password change modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                        <button type="button" class="btn btn-secondary" id="cancelPasswordChange">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Modal -->
+    <div class="modal" id="advancedSearchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Advanced Search</h3>
+                <button class="modal-close" id="closeAdvancedSearchModal" title="Close advanced search" aria-label="Close advanced search modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="advancedSearchForm">
+                    <div class="form-group">
+                        <label for="searchDateFrom">Date From</label>
+                        <input type="date" id="searchDateFrom" name="dateFrom">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchDateTo">Date To</label>
+                        <input type="date" id="searchDateTo" name="dateTo">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchStatus">Status</label>
+                        <select id="searchStatus" name="status">
+                            <option value="">All Status</option>
+                            <option value="success">Successful</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchLocation">Location</label>
+                        <input type="text" id="searchLocation" name="location" placeholder="Enter location">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchUser">User</label>
+                        <input type="text" id="searchUser" name="user" placeholder="Enter user name">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="button" class="btn btn-secondary" id="clearAdvancedSearch">Clear</button>
+                        <button type="button" class="btn btn-secondary" id="cancelAdvancedSearch">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selection Modal -->
+    <div class="modal" id="languageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Language</h3>
+                <button class="modal-close" id="closeLanguageModal" title="Close language selection" aria-label="Close language selection modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="language-options">
+                    <button class="language-option" data-lang="en">
+                        <span class="flag">🇺🇸</span>
+                        <span class="language-name">English</span>
+                    </button>
+                    <button class="language-option" data-lang="sw">
+                        <span class="flag">🇹🇿</span>
+                        <span class="language-name">Kiswahili</span>
+                    </button>
+                    <button class="language-option" data-lang="fr">
+                        <span class="flag">🇫🇷</span>
+                        <span class="language-name">Français</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Notification Settings Modal -->
+    <div class="modal" id="emailSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Email Notification Settings</h3>
+                <button class="modal-close" id="closeEmailSettingsModal" title="Close email settings" aria-label="Close email settings modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="emailSettingsForm">
+                    <div class="form-group">
+                        <label for="emailAddress">Email Address</label>
+                        <input type="email" id="emailAddress" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="accessNotifications" name="accessNotifications" checked>
+                            <span class="checkmark"></span>
+                            Access notifications
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="securityAlerts" name="securityAlerts" checked>
+                            <span class="checkmark"></span>
+                            Security alerts
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="systemUpdates" name="systemUpdates">
+                            <span class="checkmark"></span>
+                            System updates
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                        <button type="button" class="btn btn-secondary" id="cancelEmailSettings">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="user-script.js"></script>
+</body>
+</html>
