@@ -5,5 +5,6 @@ from django import forms
 class ImageAccessForm(forms.ModelForm):
     class Meta :
      model  = ImagesAccess
-     fields = ["email ","images"]
+     fields = ['email','images']
+
     
