@@ -320,6 +320,35 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Enhanced Contact Info Styles */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .contact-item i {
+            color: var(--primary-color);
+            width: 16px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+        }
     </style>
 </head>
 <body>
@@ -344,6 +373,10 @@
                 <i class="fas fa-user-plus"></i>
                 Create Account
             </a>
+            <button class="landing-btn secondary" onclick="showDemoAccess()">
+                <i class="fas fa-play"></i>
+                Quick Demo
+            </button>
         </div>
 
         <div class="features-grid">
@@ -386,6 +419,46 @@
                     Seamless door actuator control for secure, contactless access based on facial recognition results.
                 </p>
             </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Advanced Security</h3>
+                <p class="feature-description">
+                    Multi-layered security with password strength validation, session management, and account lockout protection.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 class="feature-title">Multi-Language</h3>
+                <p class="feature-description">
+                    Available in English, Swahili, and French with seamless language switching capabilities.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Analytics & Reports</h3>
+                <p class="feature-description">
+                    Comprehensive access analytics with export functionality in PDF, Excel, and CSV formats.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="feature-title">Advanced Search</h3>
+                <p class="feature-description">
+                    Powerful search and filtering capabilities across all access history and system data.
+                </p>
+            </div>
         </div>
 
 
@@ -420,6 +493,51 @@
                     window.location.href = 'welcome.html';
                 }, 1000);
             }
+        }
+        
+        function showDemoAccess() {
+            const demoMessage = `
+🚪 Smart Door Access Demo
+
+This system provides:
+
+🔐 Security Features:
+• Password strength validation
+• Account lockout protection
+• Session timeout management
+• Activity logging & monitoring
+• Encrypted data storage
+
+🎨 User Experience:
+• Dark/Light theme support
+• Multi-language (EN/SW/FR)
+• Advanced search & filtering
+• Export (PDF/Excel/CSV)
+• Professional UI design
+
+🔧 Core Features:
+• Face recognition access
+• Real-time camera integration
+• Django REST API backend
+• Arduino hardware control
+• Automated door mechanisms
+
+📊 Analytics:
+• Access history tracking
+• Success rate monitoring
+• Usage statistics
+• Security audit logs
+
+To experience the full system:
+1. Create an account (Register)
+2. Complete your profile
+3. Access the main dashboard
+4. Try face recognition access
+
+Contact: group2@gmail.com | 0761365727
+            `;
+            
+            alert(demoMessage);
         }
 
 
@@ -474,5 +592,7 @@
             });
         });
     </script>
+    <script src="security-framework.js"></script>
+    <script src="theme-language.js"></script>
 </body>
 </html>
