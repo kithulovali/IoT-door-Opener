@@ -1,4 +1,212 @@
-# IoT-door-Opener
+# IoT Door Opener - Smart Access Control System
+
+A comprehensive web-based IoT door access control system featuring face recognition technology, user management, and real-time monitoring capabilities.
+
+## 🚀 Features
+
+### Core Functionality
+- ✅ **User Registration** - Complete account creation with validation
+- ✅ **User Authentication** - Secure login with session management
+- ✅ **Profile Management** - User profile settings and security options
+- ✅ **Welcome Dashboard** - Centralized navigation and user statistics
+- ✅ **Face Recognition Access** - AI-powered door access control
+- ✅ **Access History** - Comprehensive logging and reporting
+- ✅ **Real-time Notifications** - System alerts and updates
+- ✅ **Responsive Design** - Mobile-friendly interface
+
+### Security Features
+- 🔐 Password strength validation
+- 🔐 Session timeout management
+- 🔐 Account lockout protection
+- 🔐 Activity logging and monitoring
+- 🔐 Secure data storage
+
+### User Experience
+- 🎨 Modern, professional UI design
+- 🎨 Dark/Light theme support
+- 🎨 Multi-language support (English, Swahili, French)
+- 🎨 Advanced search and filtering
+- 🎨 Export functionality (PDF, Excel, CSV)
+
+## 📋 Pages Overview
+
+### 1. Landing Page (`index.html`)
+- System overview and features
+- Quick demo access
+- Navigation to login/register
+- Contact information
+
+### 2. Registration Page (`register.html`) ✅
+- Complete user registration form
+- Real-time form validation
+- Password strength checking
+- Terms and conditions acceptance
+- Department selection
+- Automatic employee ID generation
+
+### 3. Login Page (`login.html`) ✅
+- Secure user authentication
+- Demo account access
+- Remember me functionality
+- Account lockout protection
+- Password visibility toggle
+- Forgot password option
+
+### 4. Welcome Page (`welcome.html`) ✅
+- Personalized welcome message
+- User statistics display
+- Quick navigation cards
+- Feature highlights
+- Session management
+- Auto-logout on inactivity
+
+### 5. Profile Page (Enhanced `user.html#profile`) ✅
+- Personal information management
+- Security settings
+- Password change functionality
+- 2FA setup options
+- Biometric data management
+- Activity history
+
+### 6. Main Dashboard (`user.html`)
+- Face recognition access control
+- Real-time system status
+- Access history and analytics
+- Notification center
+- Administrative tools
+
+## 🛠️ Technology Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+- **Styling:** Custom CSS with CSS Variables
+- **Icons:** Font Awesome 6.0
+- **Fonts:** Inter (Google Fonts)
+- **Storage:** localStorage/sessionStorage
+- **Camera:** WebRTC API
+- **Security:** Client-side validation, session management
+
+## 🚀 Getting Started
+
+### Installation
+1. Clone or download the repository
+2. Open `index.html` in a web browser
+3. No additional setup required!
+
+### Demo Access
+**Email:** demo@smartdoor.com  
+**Password:** Demo123!@#
+
+### File Structure
+```
+IoT-door-Opener/
+├── index.html          # Landing page
+├── register.html       # User registration ✅
+├── login.html         # User login ✅
+├── welcome.html       # Welcome dashboard ✅
+├── user.html          # Main application dashboard
+├── user-styles.css    # Comprehensive styling
+├── user-script.js     # Application logic
+└── README.md          # Documentation
+```
+
+## 💻 Usage Guide
+
+### For New Users
+1. Visit `index.html` (Landing Page)
+2. Click "Create Account" → Complete registration
+3. Login with your credentials
+4. Complete your profile information
+5. Start using face recognition access
+
+### For Existing Users
+1. Visit `index.html` or `login.html`
+2. Enter your credentials
+3. Access the welcome dashboard
+4. Navigate to desired features
+
+### Demo Mode
+1. Click "Try Demo" on landing page
+2. Or use demo credentials on login page
+3. Explore all features with sample data
+
+## 🔧 Features Detail
+
+### Registration System
+- **Validation:** Real-time form validation
+- **Security:** Strong password requirements
+- **Data:** Comprehensive user information
+- **Storage:** Secure local storage
+- **Flow:** Automatic redirect to login
+
+### Authentication System
+- **Security:** Account lockout after failed attempts
+- **Sessions:** Configurable session duration
+- **Recovery:** Password reset workflow
+- **Demo:** Quick demo access
+- **Persistence:** Remember me functionality
+
+### Welcome Dashboard
+- **Personalization:** User-specific greetings
+- **Statistics:** Access attempts and success rates
+- **Navigation:** Quick access to all features
+- **Security:** Auto-logout on inactivity
+- **Notifications:** Welcome messages for new users
+
+### Profile Management
+- **Information:** Complete profile editing
+- **Security:** Password change and 2FA
+- **Integration:** Seamless data synchronization
+- **Validation:** Real-time form validation
+- **Privacy:** Biometric data management
+
+### Face Recognition Access
+- **Camera:** WebRTC camera integration
+- **Processing:** Simulated AI recognition
+- **Security:** Confidence scoring
+- **Logging:** Complete access history
+- **Feedback:** Real-time result display
+
+## 🎨 Design Features
+
+- **Responsive:** Mobile-first design approach
+- **Accessibility:** ARIA labels and keyboard navigation
+- **Performance:** Optimized loading and animations
+- **Consistency:** Unified design language
+- **Professional:** Modern business interface
+
+## 🔒 Security Considerations
+
+- **Client-side only:** Suitable for demonstrations
+- **Production ready:** Requires backend integration
+- **Data protection:** Local storage encryption needed
+- **Authentication:** Server-side validation required
+- **Compliance:** GDPR/privacy considerations
+
+## 📱 Browser Support
+
+- ✅ Chrome 80+
+- ✅ Firefox 75+
+- ✅ Safari 13+
+- ✅ Edge 80+
+- ✅ Mobile browsers
+
+## 👥 Development Team
+
+**Group 2**  
+📧 Email: group2@gmail.com  
+📞 Phone: 0761365727
+
+## 📝 License
+
+This project is developed for educational purposes as part of System Analysis & Design coursework.
+
+## 🤝 Contributing
+
+This project is part of an academic assignment. For improvements or suggestions, please contact the development team.
+
+---
+
+*Last updated: September 2024*
 
 ![Door Opener Diagram](assets/initial_plan.png)
 
