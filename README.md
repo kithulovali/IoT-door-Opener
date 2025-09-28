@@ -1,5 +1,5 @@
 # IoT-door-Opener
-![server development sercle] (https://github.com/kithulovali/IoT-door-Opener/blob/server/server.md)
+![server development sercle] (https://github.com/kithulovali/IoT-door-Opener/blob/server/assets/Development.png)
 ![Door Opener Diagram](assets/initial_plan.png)
 
 ## INPUT [ CAMERA /FACE RECOGNISATION]
