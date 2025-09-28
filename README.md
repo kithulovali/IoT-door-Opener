@@ -2,18 +2,7 @@
 
 ![server development cercle](https://github.com/kithulovali/IoT-door-Opener/blob/server/assets/Development.png)
 
-![Door opener diagram](assets/initial_plan.png)
-
-## INPUT [ CAMERA /FACE RECOGNISATION]
-
-## PROCES [SERVER frontend---> server ---> ]
-
- Django is used as a backend server .
-
- The frontend by HTML and CSS for design .
-
- Postgress is being used as the database  in production and sqlite for devellopment.
- 
+This above image is described by the algorithm bellow 
 
 ```
 if (face == image){
@@ -23,6 +12,14 @@ if (face == image){
 }
 ```
 
+![Door opener diagram](assets/initial_plan.png)
 
+This diagram above shows the working  circle of the project itself
 
-#### The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
+ - [X] Django is used as a backend server .
+
+ - [X] The frontend by HTML and CSS for design .
+
+ - [X] Postgress is being used as the database  in production and sqlite for devellopment.
+ 
+The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
