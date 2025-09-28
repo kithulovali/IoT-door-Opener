@@ -1,283 +1,242 @@
-# IoT Door Opener - Smart Access Control System
+# 🚪 IoT Door Access System
 
-A comprehensive web-based IoT door access control system featuring face recognition technology, user management, and real-time monitoring capabilities.
+A comprehensive smart door access control system using face recognition technology, integrating camera capture, Django REST API backend, Arduino hardware control, and automated door mechanisms for secure, contactless building access.
 
-## 🚀 Features
+## 🏗️ System Architecture
 
-### Core Functionality
-- ✅ **User Registration** - Complete account creation with validation
-- ✅ **User Authentication** - Secure login with session management
-- ✅ **Profile Management** - User profile settings and security options
-- ✅ **Welcome Dashboard** - Centralized navigation and user statistics
-- ✅ **Face Recognition Access** - AI-powered door access control
-- ✅ **Access History** - Comprehensive logging and reporting
-- ✅ **Real-time Notifications** - System alerts and updates
-- ✅ **Responsive Design** - Mobile-friendly interface
+```
+IoT-door-Opener/
+├── index.html                 # Landing page with system overview
+├── register.html             # User registration with validation ✅
+├── login.html               # User authentication with security ✅
+├── welcome.html             # Personalized welcome dashboard ✅
+├── user.html                # Main application dashboard ✅
+├── user-styles.css          # Comprehensive styling with themes
+├── user-script.js           # Core application logic
+├── security-framework.js    # Security and authentication system
+├── theme-language.js        # Theme and multi-language support
+├── advanced-search.js       # Search and filtering functionality
+├── export-system.js         # Data export capabilities
+├── enhanced-login.js        # Enhanced login with security integration
+├── door_openner_server/     # Django REST API backend
+│   ├── Users/
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   └── admin.py
+│   └── door_openner_server/
+│       ├── settings.py
+│       ├── urls.py
+│       └── wsgi.py
+└── README.md               # This documentation
+```
 
-### Security Features
-- 🔐 Password strength validation
-- 🔐 Session timeout management
-- 🔐 Account lockout protection
-- 🔐 Activity logging and monitoring
-- 🔐 Secure data storage
+## ✨ Features
 
-### User Experience
-- 🎨 Modern, professional UI design
-- 🎨 Dark/Light theme support
-- 🎨 Multi-language support (English, Swahili, French)
-- 🎨 Advanced search and filtering
-- 🎨 Export functionality (PDF, Excel, CSV)
+### 🔐 Security Features
+- **Password Strength Validation**: Real-time validation with visual feedback
+- **Session Timeout Management**: Configurable 30-minute timeout with activity monitoring
+- **Account Lockout Protection**: 5 failed attempts trigger 30-minute lockout
+- **Activity Logging**: Comprehensive audit trail with export capabilities
+- **Secure Data Storage**: Client-side encryption for sensitive data
 
-## 📋 Pages Overview
+### 🎨 User Experience
+- **Dark/Light Theme Support**: Professional theme switching with persistence
+- **Multi-Language Support**: English, Swahili, and French with seamless switching
+- **Advanced Search & Filtering**: Global search across all system data
+- **Export Functionality**: PDF, Excel, and CSV export capabilities
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
-### 1. Landing Page (`index.html`)
-- System overview and features
-- Quick demo access
-- Navigation to login/register
-- Contact information
-
-### 2. Registration Page (`register.html`) ✅
-- Complete user registration form
-- Real-time form validation
-- Password strength checking
-- Terms and conditions acceptance
-- Department selection
-- Automatic employee ID generation
-
-### 3. Login Page (`login.html`) ✅
-- Secure user authentication
-- Demo account access
-- Remember me functionality
-- Account lockout protection
-- Password visibility toggle
-- Forgot password option
-
-### 4. Welcome Page (`welcome.html`) ✅
-- Personalized welcome message
-- User statistics display
-- Quick navigation cards
-- Feature highlights
-- Session management
-- Auto-logout on inactivity
-
-### 5. Profile Page (Enhanced `user.html#profile`) ✅
-- Personal information management
-- Security settings
-- Password change functionality
-- 2FA setup options
-- Biometric data management
-- Activity history
-
-### 6. Main Dashboard (`user.html`)
-- Face recognition access control
-- Real-time system status
-- Access history and analytics
-- Notification center
-- Administrative tools
-
-## 🛠️ Technology Stack
-
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **Styling:** Custom CSS with CSS Variables
-- **Icons:** Font Awesome 6.0
-- **Fonts:** Inter (Google Fonts)
-- **Storage:** localStorage/sessionStorage
-- **Camera:** WebRTC API
-- **Security:** Client-side validation, session management
+### 🔧 Core Functionality
+- **Face Recognition Access**: Real-time camera integration for biometric authentication
+- **User Management**: Complete profile management with security settings
+- **Access History**: Detailed logging with analytics and reporting
+- **Notification System**: Real-time alerts and system notifications
+- **Hardware Integration**: Arduino microcontroller and door mechanism control
 
 ## 🚀 Getting Started
 
+### Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Local web server (optional, for development)
+- Camera access for face recognition features
+
 ### Installation
-1. Clone or download the repository
-2. Open `index.html` in a web browser
-3. No additional setup required!
 
-### Demo Access
-**Email:** demo@smartdoor.com  
-**Password:** Demo123!@#
+1. **Clone or download the project files**
+   ```bash
+   git clone <repository-url>
+   cd IoT-door-Opener
+   ```
 
-### File Structure
-```
-IoT-door-Opener/
-├── index.html          # Landing page
-├── register.html       # User registration ✅
-├── login.html         # User login ✅
-├── welcome.html       # Welcome dashboard ✅
-├── user.html          # Main application dashboard
-├── user-styles.css    # Comprehensive styling
-├── user-script.js     # Application logic
-└── README.md          # Documentation
-```
+2. **Open the landing page**
+   - Open `index.html` in your web browser
+   - Or serve through a local web server for better development experience
 
-## 💻 Usage Guide
+3. **Create an account**
+   - Click "Create Account" on the landing page
+   - Fill in your information with a strong password
+   - Complete profile setup
 
-### For New Users
-1. Visit `index.html` (Landing Page)
-2. Click "Create Account" → Complete registration
-3. Login with your credentials
-4. Complete your profile information
-5. Start using face recognition access
+4. **Start using the system**
+   - Log in with your credentials
+   - Explore the dashboard and features
+   - Set up face recognition for door access
 
-### For Existing Users
-1. Visit `index.html` or `login.html`
-2. Enter your credentials
-3. Access the welcome dashboard
-4. Navigate to desired features
+## 📱 User Journey
 
-### Demo Mode
-1. Click "Try Demo" on landing page
-2. Or use demo credentials on login page
-3. Explore all features with sample data
+### 1. Landing Page (`index.html`)
+- System overview with feature highlights
+- Quick demo access
+- Navigation to registration/login
 
-## 🔧 Features Detail
+### 2. Registration (`register.html`)
+- Complete user registration form
+- Real-time password strength validation
+- Automatic employee ID generation
+- Department selection
 
-### Registration System
-- **Validation:** Real-time form validation
-- **Security:** Strong password requirements
-- **Data:** Comprehensive user information
-- **Storage:** Secure local storage
-- **Flow:** Automatic redirect to login
+### 3. Login (`login.html`)
+- Secure authentication with lockout protection
+- Remember me functionality
+- Enhanced security monitoring
 
-### Authentication System
-- **Security:** Account lockout after failed attempts
-- **Sessions:** Configurable session duration
-- **Recovery:** Password reset workflow
-- **Demo:** Quick demo access
-- **Persistence:** Remember me functionality
+### 4. Welcome Dashboard (`welcome.html`)
+- Personalized welcome with user statistics
+- Quick navigation to all features
+- Session management and auto-logout
 
-### Welcome Dashboard
-- **Personalization:** User-specific greetings
-- **Statistics:** Access attempts and success rates
-- **Navigation:** Quick access to all features
-- **Security:** Auto-logout on inactivity
-- **Notifications:** Welcome messages for new users
+### 5. Main Dashboard (`user.html`)
+- Face recognition access control
+- Access history and analytics
+- Profile management and security settings
+- Advanced search and export capabilities
 
-### Profile Management
-- **Information:** Complete profile editing
-- **Security:** Password change and 2FA
-- **Integration:** Seamless data synchronization
-- **Validation:** Real-time form validation
-- **Privacy:** Biometric data management
+## 🔧 Technical Details
 
-### Face Recognition Access
-- **Camera:** WebRTC camera integration
-- **Processing:** Simulated AI recognition
-- **Security:** Confidence scoring
-- **Logging:** Complete access history
-- **Feedback:** Real-time result display
+### Frontend Architecture
+- **Vanilla JavaScript**: Modular architecture with dedicated functionality files
+- **CSS3**: Advanced styling with CSS custom properties for theming
+- **HTML5**: Semantic markup with accessibility features
+- **Font Awesome**: Professional icon library
+- **Inter Font**: Modern typography from Google Fonts
 
-## 🎨 Design Features
+### Security Implementation
+- **Client-side Encryption**: AES-style encryption for local data storage
+- **Session Management**: Secure session handling with timeout
+- **Input Validation**: Comprehensive form validation and sanitization
+- **CSRF Protection**: Built-in protection against common attacks
+- **Activity Monitoring**: Real-time security event tracking
 
-- **Responsive:** Mobile-first design approach
-- **Accessibility:** ARIA labels and keyboard navigation
-- **Performance:** Optimized loading and animations
-- **Consistency:** Unified design language
-- **Professional:** Modern business interface
+### Data Management
+- **Local Storage**: Encrypted local data persistence
+- **Export Formats**: PDF (jsPDF), Excel (SheetJS), CSV
+- **Search Engine**: Semantic search with relevance scoring
+- **Caching**: Efficient data caching for performance
 
-## 🔒 Security Considerations
+## 🌐 Multi-Language Support
 
-- **Client-side only:** Suitable for demonstrations
-- **Production ready:** Requires backend integration
-- **Data protection:** Local storage encryption needed
-- **Authentication:** Server-side validation required
-- **Compliance:** GDPR/privacy considerations
+The system supports three languages:
+- **English (en)**: Default language
+- **Swahili (sw)**: Kiswahili translation
+- **French (fr)**: Français translation
 
-## 📱 Browser Support
+Language can be changed from any page using the globe icon in the header.
 
-- ✅ Chrome 80+
-- ✅ Firefox 75+
-- ✅ Safari 13+
-- ✅ Edge 80+
-- ✅ Mobile browsers
+## 🎨 Theme System
 
-## 👥 Development Team
+Two professional themes available:
+- **Light Theme**: Clean, modern light interface
+- **Dark Theme**: Eye-friendly dark interface
 
-**Group 2**  
-📧 Email: group2@gmail.com  
-📞 Phone: 0761365727
+Theme preference is automatically saved and persists across sessions.
 
-## 📝 License
+## 📊 Analytics & Reporting
+
+### Access Analytics
+- Success/failure rates
+- Access attempt frequency
+- User activity patterns
+- Security event monitoring
+
+### Export Options
+- **PDF Reports**: Professional formatted reports with branding
+- **Excel Spreadsheets**: Detailed data with multiple worksheets
+- **CSV Data**: Raw data for external analysis
+
+## 🔌 Hardware Integration
+
+### Camera System
+- Real-time video capture
+- Face detection and recognition
+- Image processing and analysis
+- Confidence scoring
+
+### Arduino Control
+- Door mechanism control
+- Sensor integration
+- Status monitoring
+- Hardware feedback
+
+## 🚨 Security Considerations
+
+### Password Policy
+- Minimum 8 characters
+- Mixed case letters required
+- Numbers and special characters required
+- Common password prevention
+
+### Session Security
+- Automatic timeout after 30 minutes of inactivity
+- Secure session token generation
+- Activity-based session renewal
+- Logout on suspicious activity
+
+### Access Control
+- Role-based permissions
+- Activity logging and audit trails
+- Failed attempt monitoring
+- Account lockout protection
+
+## 🛠️ Development
+
+### Adding New Features
+1. Follow the modular JavaScript architecture
+2. Maintain consistent styling with existing components
+3. Add proper security validation
+4. Include multi-language support
+5. Test across all supported browsers
+
+### Styling Guidelines
+- Use CSS custom properties for consistent theming
+- Follow responsive design principles
+- Maintain accessibility standards
+- Use the existing color palette and spacing system
+
+### Security Best Practices
+- Validate all user inputs
+- Encrypt sensitive data before storage
+- Log security-relevant events
+- Implement proper error handling
+- Follow OWASP security guidelines
+
+## 📞 Support & Contact
+
+- **Email**: group2@gmail.com
+- **Phone**: 0761365727
+- **Development Team**: Group 2
+- **System Monitoring**: 24/7 availability
+
+## 📄 License
 
 This project is developed for educational purposes as part of System Analysis & Design coursework.
 
-## 🤝 Contributing
+## 🔄 Version History
 
-This project is part of an academic assignment. For improvements or suggestions, please contact the development team.
-
----
-
-*Last updated: September 2024*
-
-![Door Opener Diagram](assets/initial_plan.png)
-
-## INPUT [ CAMERA /FACE RECOGNISATION]
-
-```
-{USER ON DOOR} CAMERA --------->SERVER --------> DOOR 
-{ADMIN REMOTE ACCESS} OFFICIAL WEBSITE -------> NEW USERS REGISTRATION ------> SAVED IN A DATABASE
-```
-
-## PROCES [SERVER frontend---> server ---> ]
-
-##### Django is used as a backend server .
-
-##### The frontend by HTML and CSS for design .
-
-##### Postgress is being used as the database .
-
-# OUTPUT [SERVER TO DOOR FACE RECOGNISE OR IGNORED]
-
-##### This is the final step where by the user either get in or ingored  .
-
-#### The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
+- **v1.0.0**: Initial release with core functionality
+- **v1.1.0**: Added security features and multi-language support
+- **v1.2.0**: Enhanced UI/UX with dark theme and advanced search
+- **v1.3.0**: Added export functionality and comprehensive analytics
 
 ---
 
-## Frontend (HTML/CSS/JS)
-
-This repository includes a complete user portal for the face recognition door access system.
-
-### User Portal Features
-
-- **Dashboard**: Overview of access status, statistics, and recent activity
-- **Door Access**: Face recognition interface with camera integration
-- **Access History**: Detailed log of all access attempts with filtering
-- **Profile Management**: User profile settings and security options
-- **Help & Support**: User guides and contact information
-
-### How to run
-
-- Option 1: Open `user.html` directly in your browser.
-- Option 2: Serve locally (recommended for camera access).
-
-Windows PowerShell example:
-
-```powershell
-cd "C:\Users\lenovo\Desktop\Drago Samuel\Year 2\System Analy & Design\Assin\IoT-door-Opener"
-python -m http.server 5500
-```
-
-Then open `http://localhost:5500/user.html` in your browser.
-
-### Current Features
-
-- **Face Recognition Access**: Camera-based face recognition with mock API
-- **Access History**: Complete log with filtering and export functionality
-- **User Dashboard**: Real-time statistics and notifications
-- **Profile Management**: User settings and security options
-- **Responsive Design**: Works on desktop and mobile devices
-
-### Technical Implementation
-
-- **HTML5**: Semantic structure with accessibility features
-- **CSS3**: Modern styling with CSS Grid and Flexbox
-- **JavaScript ES6+**: Class-based architecture with async/await
-- **Camera API**: WebRTC for face capture
-- **Local Storage**: User preferences and session data
-
-### Next Steps
-
-- Integrate with Django backend API
-- Connect to real face recognition service
-- Implement actual door actuator control
-- Add real-time notifications via WebSocket
+**© 2025 Smart Door Access System - Developed by Group 2**
