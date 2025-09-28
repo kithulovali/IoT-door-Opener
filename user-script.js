@@ -201,6 +201,11 @@ class UserPortal {
             this.hideModal('emailSettingsModal');
         });
 
+        // Logout button
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            this.logout();
+        });
+
         // Close modals on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -557,6 +562,12 @@ class UserPortal {
 
     addAccessHistory(entry) {
         this.accessHistory.unshift(entry);
+        
+        // Save to localStorage for persistence
+        if (this.currentUser.id) {
+            localStorage.setItem(`accessHistory_${this.currentUser.id}`, JSON.stringify(this.accessHistory));
+        }
+        
         this.updateHistoryTable();
         this.updateDashboard();
     }
@@ -645,18 +656,39 @@ class UserPortal {
     viewAccessDetails(timestamp) {
         const entry = this.accessHistory.find(e => e.timestamp.getTime() == timestamp);
         if (entry) {
-            alert(`Access Details:\n\nDate: ${this.formatDateTime(entry.timestamp)}\nStatus: ${entry.status}\nLocation: ${entry.location}\nConfidence: ${entry.confidence}%\n${entry.reason ? `Reason: ${entry.reason}` : ''}`);
+            alert(`Access Details:
+
+Date: ${this.formatDateTime(entry.timestamp)}
+Status: ${entry.status}
+Location: ${entry.location}
+Confidence: ${entry.confidence}%
+${entry.reason ? `Reason: ${entry.reason}` : ''}`);
         }
     }
 
     // Profile Functions
     loadProfileData() {
-        document.getElementById('firstName').value = this.currentUser.name.split(' ')[0] || '';
-        document.getElementById('lastName').value = this.currentUser.name.split(' ')[1] || '';
+        const firstName = this.currentUser.name.split(' ')[0] || '';
+        const lastName = this.currentUser.name.split(' ').slice(1).join(' ') || '';
+        
+        document.getElementById('firstName').value = firstName;
+        document.getElementById('lastName').value = lastName;
         document.getElementById('email').value = this.currentUser.email || '';
         document.getElementById('phone').value = this.currentUser.phone || '';
         document.getElementById('department').value = this.currentUser.department || '';
         document.getElementById('employeeId').value = this.currentUser.employeeId || '';
+        
+        // Update profile status indicator
+        const profileStatus = document.getElementById('profileStatus');
+        if (profileStatus) {
+            if (this.currentUser.name && this.currentUser.email) {
+                profileStatus.textContent = 'Active';
+                profileStatus.className = 'badge badge-success';
+            } else {
+                profileStatus.textContent = 'Incomplete';
+                profileStatus.className = 'badge badge-warning';
+            }
+        }
     }
 
     updateProfile() {
@@ -672,8 +704,61 @@ class UserPortal {
         };
         
         this.currentUser = updatedUser;
+        
+        // Update session data
+        const sessionData = JSON.parse(
+            localStorage.getItem('userSession') || 
+            sessionStorage.getItem('userSession') || 
+            'null'
+        );
+        
+        if (sessionData) {
+            sessionData.user = {
+                ...sessionData.user,
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                department: formData.get('department'),
+                employeeId: formData.get('employeeId') || this.generateEmployeeId()
+            };
+            
+            // Update both storage types
+            if (localStorage.getItem('userSession')) {
+                localStorage.setItem('userSession', JSON.stringify(sessionData));
+            }
+            if (sessionStorage.getItem('userSession')) {
+                sessionStorage.setItem('userSession', JSON.stringify(sessionData));
+            }
+            
+            // Update registered users list
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            const userIndex = registeredUsers.findIndex(u => u.id === sessionData.user.id || u.email === sessionData.user.email);
+            if (userIndex !== -1) {
+                registeredUsers[userIndex] = {
+                    ...registeredUsers[userIndex],
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    phone: formData.get('phone'),
+                    department: formData.get('department'),
+                    employeeId: formData.get('employeeId') || this.generateEmployeeId()
+                };
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            }
+        }
+        
         this.updateUserInfo();
         this.showNotification('Profile Updated', 'Your profile has been successfully updated.', 'success');
+        
+        // Add activity for profile update
+        this.addAccessHistory({
+            timestamp: new Date(),
+            status: 'success',
+            location: 'Profile Settings',
+            confidence: 100,
+            userName: this.currentUser.name,
+            type: 'profile_update'
+        });
     }
 
     resetProfileForm() {
@@ -897,7 +982,36 @@ class UserPortal {
     }
 
     loadUserData() {
-        // In a real application, this would load from an API
+        // Check for active session and load user data
+        const sessionData = JSON.parse(
+            localStorage.getItem('userSession') || 
+            sessionStorage.getItem('userSession') || 
+            'null'
+        );
+        
+        if (sessionData && sessionData.user) {
+            this.currentUser = {
+                id: sessionData.user.id || '',
+                name: `${sessionData.user.firstName || ''} ${sessionData.user.lastName || ''}`.trim(),
+                email: sessionData.user.email || '',
+                phone: sessionData.user.phone || '',
+                department: sessionData.user.department || '',
+                employeeId: sessionData.user.employeeId || '',
+                status: sessionData.user.status || 'Active'
+            };
+            
+            // Load user's access history if available
+            const userHistory = JSON.parse(localStorage.getItem(`accessHistory_${this.currentUser.id}`) || '[]');
+            this.accessHistory = userHistory;
+            
+            // Load user's notifications
+            const userNotifications = JSON.parse(localStorage.getItem(`notifications_${this.currentUser.id}`) || '[]');
+            this.notifications = userNotifications.length > 0 ? userNotifications : this.getDefaultNotifications();
+        } else {
+            // No session found, redirect to login
+            window.location.href = 'login.html';
+        }
+        
         console.log('User data loaded:', this.currentUser);
     }
 
@@ -905,6 +1019,35 @@ class UserPortal {
         // Generate a simple employee ID
         const timestamp = Date.now().toString().slice(-6);
         return `EMP${timestamp}`;
+    }
+
+    getDefaultNotifications() {
+        return [
+            {
+                id: 1,
+                title: 'Welcome to Smart Door Access',
+                message: 'Your account has been set up successfully. You can now access doors using face recognition.',
+                time: 'Just now',
+                read: false,
+                icon: 'fa-door-open'
+            },
+            {
+                id: 2,
+                title: 'Security Notice',
+                message: 'For your security, please ensure your profile information is up to date.',
+                time: '1 hour ago',
+                read: false,
+                icon: 'fa-shield-alt'
+            },
+            {
+                id: 3,
+                title: 'System Information',
+                message: 'Face recognition system is online and ready for use.',
+                time: '2 hours ago',
+                read: true,
+                icon: 'fa-info'
+            }
+        ];
     }
 
     // Theme Management
@@ -1392,7 +1535,60 @@ class UserPortal {
         
         this.showNotification('Email Sent', `Notification sent to ${this.emailSettings.email}`, 'success');
     }
+
+    logout() {
+        if (confirm('Are you sure you want to log out?')) {
+            // Clear session data
+            localStorage.removeItem('userSession');
+            sessionStorage.removeItem('userSession');
+            
+            // Log logout activity
+            const activities = JSON.parse(localStorage.getItem('loginActivities') || '[]');
+            activities.unshift({
+                type: 'logout',
+                timestamp: new Date(),
+                userId: this.currentUser?.id,
+                success: true,
+                reason: 'User logout'
+            });
+            localStorage.setItem('loginActivities', JSON.stringify(activities.slice(0, 50)));
+            
+            // Redirect to login
+            window.location.href = 'login.html';
+        }
+    }
 }
+
+// Global functions
+function logout() {
+    if (typeof userPortal !== 'undefined' && userPortal.logout) {
+        userPortal.logout();
+    } else {
+        // Fallback logout if userPortal is not available
+        if (confirm('Are you sure you want to log out?')) {
+            localStorage.removeItem('userSession');
+            sessionStorage.removeItem('userSession');
+            window.location.href = 'login.html';
+        }
+    }
+}
+
+// Initialize user portal when DOM is loaded
+const userPortal = new UserPortal();
+
+// Prevent navigation away from dashboard without proper logout
+window.addEventListener('beforeunload', (e) => {
+    const sessionData = JSON.parse(
+        localStorage.getItem('userSession') || 
+        sessionStorage.getItem('userSession') || 
+        'null'
+    );
+    
+    if (sessionData && sessionData.user && window.location.pathname.includes('user.html')) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
