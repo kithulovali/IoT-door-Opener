@@ -277,11 +277,11 @@
                     </div>
 
                     <div class="access-info-card">
-                        <h4>Access Instructions</h4>
+                        <h4>Face Recognition Access</h4>
                         <ol class="instructions-list">
-                            <li>Click "Start Camera" to activate your device camera</li>
+                            <li>Click "Start Camera" to activate face recognition</li>
                             <li>Position your face clearly in the camera view</li>
-                            <li>Click "Capture & Access" to take a photo and request access</li>
+                            <li>Click "Capture & Access" to analyze your face</li>
                             <li>Wait for the system to verify your identity</li>
                             <li>If successful, the door will unlock automatically</li>
                         </ol>
@@ -293,7 +293,19 @@
                                 <li>Look directly at the camera</li>
                                 <li>Remove sunglasses or face coverings</li>
                                 <li>Keep a neutral expression</li>
+                                <li>Make sure your face is centered in the frame</li>
                             </ul>
+                        </div>
+                        
+                        <div class="face-recognition-info">
+                            <h5>Face Recognition Status:</h5>
+                            <div class="recognition-status">
+                                <span class="status-indicator" id="faceDataStatus">Face data not registered</span>
+                                <button class="btn btn-sm btn-secondary" id="registerFaceBtn" onclick="showFaceRegistrationInfo()">
+                                    <i class="fas fa-user-plus"></i>
+                                    Register Face
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -386,18 +398,29 @@
                 <div class="profile-container">
                     <div class="profile-card">
                         <div class="profile-header">
-                            <div class="profile-avatar-large" id="profileAvatar">
+                            <div class="profile-avatar-large" id="profileAvatar" onclick="triggerPhotoUpload()" style="cursor: pointer;">
                                 <i class="fas fa-user"></i>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Change Photo</span>
+                                </div>
                             </div>
                             <div class="profile-info">
                                 <h3 id="profileName">User</h3>
                                 <p id="profileEmail">user@example.com</p>
                                 <span class="badge badge-success" id="profileStatus">Active</span>
                             </div>
-                            <button class="btn btn-secondary" id="changePhotoBtn">
-                                <i class="fas fa-camera"></i>
-                                Change Photo
-                            </button>
+                            <div class="profile-actions">
+                                <button class="btn btn-secondary" id="changePhotoBtn" onclick="triggerPhotoUpload()">
+                                    <i class="fas fa-camera"></i>
+                                    Change Photo
+                                </button>
+                                <button class="btn btn-secondary" id="removePhotoBtn" onclick="removeProfilePhoto()" style="display: none;">
+                                    <i class="fas fa-trash"></i>
+                                    Remove Photo
+                                </button>
+                            </div>
+                            <input type="file" id="photoUpload" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
                         </div>
 
                         <form class="profile-form" id="profileForm">
@@ -700,6 +723,107 @@
         </div>
     </div>
 
+    <!-- Photo Upload Modal -->
+    <div class="photo-upload-modal" id="photoUploadModal">
+        <div class="photo-upload-content">
+            <div class="photo-upload-header">
+                <h3><i class="fas fa-camera"></i> Update Profile Photo</h3>
+                <button class="photo-upload-close" onclick="closePhotoUploadModal()" title="Close photo upload modal" aria-label="Close photo upload modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoFileInput').click()">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">Click to select a photo</div>
+                <div class="upload-hint">or drag and drop an image here<br>Supports JPG, PNG, GIF (max 5MB)</div>
+            </div>
+            
+            <input type="file" id="photoFileInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+            
+            <div class="photo-preview-container" id="photoPreviewContainer">
+                <img id="photoPreviewImage" class="photo-preview-image" alt="Photo preview">
+                <div class="photo-info" id="photoInfo">
+                    <div class="photo-info-item">
+                        <span>File name:</span>
+                        <span id="photoFileName"></span>
+                    </div>
+                    <div class="photo-info-item">
+                        <span>File size:</span>
+                        <span id="photoFileSize"></span>
+                    </div>
+                    <div class="photo-info-item">
+                        <span>Dimensions:</span>
+                        <span id="photoDimensions"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="photo-upload-actions">
+                <button class="btn btn-secondary" onclick="closePhotoUploadModal()">Cancel</button>
+                <button class="btn btn-primary" id="savePhotoBtn" onclick="saveProfilePhoto()" disabled>
+                    <i class="fas fa-save"></i>
+                    Save Photo
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="user-script.js"></script>
+    <script src="security-framework.js"></script>
+    <script src="theme-language.js"></script>
+    <script src="advanced-search.js"></script>
+    <script src="export-system.js"></script>
+    <script src="face-recognition.js"></script>
+    <script>
+        // Face registration helper function - Made global
+        function showFaceRegistrationInfo() {
+            const message = `
+🤖 Face Recognition Registration
+
+To enable face recognition access:
+
+1. Complete your profile information first
+2. Your face data is automatically registered when you update your profile
+3. The system learns from your access attempts to improve accuracy
+
+🎯 Current Status:
+• Face recognition system is active
+• Confidence threshold: 60%
+• Maximum stored faces per user: 3
+
+💡 Tips for better recognition:
+• Ensure good lighting when using the system
+• Look directly at the camera
+• Use the system regularly to improve accuracy
+• Contact support if you experience issues
+
+Your face data is stored securely and encrypted locally.
+            `;
+            alert(message);
+        }
+
+        // Update face registration status when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const userPortal = window.userPortal;
+                if (userPortal && userPortal.currentUser && userPortal.currentUser.id) {
+                    const faceStatus = document.getElementById('faceDataStatus');
+                    const registerBtn = document.getElementById('registerFaceBtn');
+                    
+                    if (window.faceRecognitionSystem) {
+                        const userData = window.faceRecognitionSystem.getUserFaceData(userPortal.currentUser.id);
+                        if (userData && userData.faces.length > 0) {
+                            faceStatus.textContent = `Face data registered (${userData.faces.length} samples)`;
+                            faceStatus.classList.add('registered');
+                            registerBtn.style.display = 'none';
+                        }
+                    }
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
