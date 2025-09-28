@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Door Access System</title>
+    <link rel="stylesheet" href="user-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .landing-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .landing-logo {
+            font-size: 5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+            text-shadow: none;
+        }
+
+        .landing-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-shadow: none;
+        }
+
+        .landing-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .landing-actions {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .landing-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .landing-btn.primary {
+            background: var(--white);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .landing-btn.primary:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .landing-btn.secondary {
+            background: var(--white);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .landing-btn.secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-dark);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+
+
+        .footer {
+            margin-top: auto;
+            padding-top: var(--spacing-xl);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .landing-title {
+                font-size: 2.5rem;
+            }
+
+            .landing-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: var(--spacing-xl);
+            }
+
+            .landing-container {
+                padding: var(--spacing-md);
+            }
+
+            .landing-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: var(--spacing-md);
+            }
+
+            .landing-btn {
+                width: 100%;
+                max-width: 300px;
+                padding: var(--spacing-md) var(--spacing-lg);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+                margin-bottom: var(--spacing-xl);
+            }
+
+            .feature-card {
+                padding: var(--spacing-lg);
+            }
+
+            .feature-icon {
+                font-size: 2rem;
+            }
+
+            .feature-title {
+                font-size: 1.1rem;
+            }
+
+            .footer {
+                padding-top: var(--spacing-lg);
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .landing-logo {
+                font-size: 3rem;
+            }
+
+            .landing-title {
+                font-size: 2rem;
+            }
+
+            .landing-subtitle {
+                font-size: 1rem;
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .landing-container {
+                padding: var(--spacing-sm);
+            }
+
+            .landing-btn {
+                font-size: 0.9rem;
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .feature-card {
+                padding: var(--spacing-md);
+            }
+
+            .feature-icon {
+                font-size: 1.8rem;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .feature-title {
+                font-size: 1rem;
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .feature-description {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .landing-btn {
+                min-height: 44px;
+            }
+
+            .feature-card {
+                min-height: 44px;
+                cursor: pointer;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .landing-container {
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .landing-title {
+                font-size: 2rem;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .landing-subtitle {
+                font-size: 1rem;
+                margin-bottom: var(--spacing-md);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .footer {
+                padding-top: var(--spacing-md);
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .feature-card {
+                border: 2px solid var(--text-primary);
+            }
+
+            .landing-btn {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-logo">
+            <i class="fas fa-door-open"></i>
+        </div>
+        
+        <h1 class="landing-title">Smart Door Access</h1>
+        <p class="landing-subtitle">
+            Secure, intelligent, and seamless door access using advanced face recognition technology. 
+            Experience the future of building security with our IoT-powered system.
+        </p>
+
+        <div class="landing-actions">
+            <a href="login.html" class="landing-btn primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </a>
+            <a href="register.html" class="landing-btn secondary">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </a>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-face-smile"></i>
+                </div>
+                <h3 class="feature-title">Face Recognition</h3>
+                <p class="feature-description">
+                    Advanced AI-powered face recognition technology for secure and contactless access control.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Secure Access</h3>
+                <p class="feature-description">
+                    Multi-layered security with encrypted data transmission and comprehensive activity logging.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Real-time Analytics</h3>
+                <p class="feature-description">
+                    Monitor access patterns, generate reports, and track usage statistics in real-time.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="feature-title">Mobile Ready</h3>
+                <p class="feature-description">
+                    Responsive design works seamlessly across all devices for access anywhere, anytime.
+                </p>
+            </div>
+        </div>
+
+
+
+        <div class="footer">
+            <p>&copy; 2025 Smart Door Access System. Developed by Group 2.</p>
+            <p>Contact: group2@gmail.com | Phone: 0761365727</p>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            checkExistingSession();
+        });
+
+        function checkExistingSession() {
+            const sessionData = JSON.parse(
+                localStorage.getItem('userSession') || 
+                sessionStorage.getItem('userSession') || 
+                'null'
+            );
+
+            if (sessionData && sessionData.user) {
+                // User is already logged in, redirect to welcome page
+                showLoading();
+                setTimeout(() => {
+                    window.location.href = 'welcome.html';
+                }, 1000);
+            }
+        }
+
+
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Smooth scroll behavior for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.classList.contains('landing-btn')) {
+                e.target.click();
+            }
+        });
+
+        // Add loading states to navigation buttons
+        document.querySelectorAll('.landing-btn:not([onclick])').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (!btn.classList.contains('loading')) {
+                    btn.classList.add('loading');
+                    showLoading();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
