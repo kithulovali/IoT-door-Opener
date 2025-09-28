@@ -6,18 +6,23 @@
 
 ## INPUT [ CAMERA /FACE RECOGNISATION]
 
--
-
 ## PROCES [SERVER frontend---> server ---> ]
 
-##### Django is used as a backend server .
+ Django is used as a backend server .
 
-##### The frontend by HTML and CSS for design .
+ The frontend by HTML and CSS for design .
 
-##### Postgress is being used as the database .
+ Postgress is being used as the database  in production and sqlite for devellopment.
+ 
 
-# OUTPUT [SERVER TO DOOR FACE RECOGNISE OR IGNORED]
+```
+if (face == image){
+ arduino -> send Opendoor
+}else{
+ you are not allowed here 
+}
+```
 
-##### This is the final step where by the user either get in or ingored  .
+
 
 #### The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
