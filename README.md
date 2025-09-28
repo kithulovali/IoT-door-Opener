@@ -1,13 +1,10 @@
 # IoT-door-Opener
-
+![server development sercle] (https://github.com/kithulovali/IoT-door-Opener/blob/server/server.md)
 ![Door Opener Diagram](assets/initial_plan.png)
 
 ## INPUT [ CAMERA /FACE RECOGNISATION]
 
-```
-{USER ON DOOR} CAMERA --------->SERVER --------> DOOR 
-{ADMIN REMOTE ACCESS} OFFICIAL WEBSITE -------> NEW USERS REGISTRATION ------> SAVED IN A DATABASE
-```
+-
 
 ## PROCES [SERVER frontend---> server ---> ]
 
