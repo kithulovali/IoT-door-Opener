@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Door Access System</title>
+    <link rel="stylesheet" href="user-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: var(--spacing-lg);
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-2xl);
+            padding: var(--spacing-2xl);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .auth-logo {
+            font-size: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .form-input.error {
+            border-color: var(--danger-color);
+        }
+
+        .form-error {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: var(--spacing-xs);
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--primary-gradient);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-links {
+            text-align: center;
+        }
+
+        .auth-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: rgba(5, 150, 105, 0.1);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+            color: var(--success-color);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--danger-color);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: var(--spacing-lg) 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            margin: 0 var(--spacing-md);
+        }
+
+
+
+        .security-info {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: var(--info-color);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            font-size: 0.875rem;
+        }
+
+        .security-info i {
+            margin-right: var(--spacing-sm);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: var(--spacing-md);
+            }
+
+            .auth-card {
+                padding: var(--spacing-lg);
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .auth-logo {
+                font-size: 2.5rem;
+            }
+
+            .auth-title {
+                font-size: 1.75rem;
+            }
+
+            .auth-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .form-input {
+                padding: var(--spacing-sm);
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+
+            .auth-btn {
+                padding: var(--spacing-md);
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--spacing-sm);
+            }
+
+            .auth-card {
+                padding: var(--spacing-md);
+            }
+
+            .auth-logo {
+                font-size: 2rem;
+            }
+
+            .auth-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .auth-btn {
+                min-height: 44px;
+            }
+
+            .password-toggle {
+                min-width: 44px;
+                min-height: 44px;
+                padding: var(--spacing-sm);
+            }
+
+            .checkbox-group input[type="checkbox"] {
+                min-width: 20px;
+                min-height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to access the Smart Door System</p>
+            </div>
+
+            <div class="success-message" id="successMessage"></div>
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" required autocomplete="email">
+                    <div class="form-error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword()" title="Toggle password visibility" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                    <div class="form-error" id="passwordError"></div>
+                </div>
+
+                <div class="form-options">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-btn" id="submitBtn">
+                    <span id="submitText">Sign In</span>
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                </button>
+            </form>
+
+            <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                Your login is secured with encryption and monitored for security.
+            </div>
+
+            <div class="divider">
+                <span>Don't have an account?</span>
+            </div>
+
+            <div class="auth-links">
+                <p><a href="register.html">Create New Account</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Login {
+            constructor() {
+                this.form = document.getElementById('loginForm');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.maxAttempts = 5;
+                this.attemptCount = parseInt(localStorage.getItem('loginAttempts') || '0');
+                this.lockoutTime = parseInt(localStorage.getItem('lockoutTime') || '0');
+                
+                this.init();
+            }
+
+            init() {
+                this.checkLockout();
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.setupValidation();
+                this.checkUrlParams();
+            }
+
+            checkUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const registered = urlParams.get('registered');
+                
+                if (registered === 'true') {
+                    this.showMessage('success', 'Registration successful! Please sign in with your credentials.');
+                }
+            }
+
+            checkLockout() {
+                const now = Date.now();
+                if (this.lockoutTime > now) {
+                    const remainingTime = Math.ceil((this.lockoutTime - now) / 1000 / 60);
+                    this.showMessage('error', `Account temporarily locked. Try again in ${remainingTime} minutes.`);
+                    this.submitBtn.disabled = true;
+                    
+                    // Auto-unlock when time expires
+                    setTimeout(() => {
+                        location.reload();
+                    }, this.lockoutTime - now);
+                }
+            }
+
+            setupValidation() {
+                const inputs = this.form.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearError(input));
+                });
+            }
+
+            validateField(field) {
+                const value = field.value.trim();
+                let isValid = true;
+                let errorMessage = '';
+
+                switch (field.name) {
+                    case 'email':
+                        if (!value) {
+                            errorMessage = 'Email is required';
+                            isValid = false;
+                        } else if (!this.isValidEmail(value)) {
+                            errorMessage = 'Please enter a valid email address';
+                            isValid = false;
+                        }
+                        break;
+
+                    case 'password':
+                        if (!value) {
+                            errorMessage = 'Password is required';
+                            isValid = false;
+                        }
+                        break;
+                }
+
+                this.showError(field, errorMessage);
+                return isValid;
+            }
+
+            validateForm() {
+                const requiredFields = this.form.querySelectorAll('input[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                return isValid;
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            showError(field, message) {
+                const errorElement = document.getElementById(field.name + 'Error');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    field.classList.toggle('error', !!message);
+                }
+            }
+
+            clearError(field) {
+                const errorElement = document.getElementById(field.name + 'Error');
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    field.classList.remove('error');
+                }
+            }
+
+            showMessage(type, message) {
+                const successEl = document.getElementById('successMessage');
+                const errorEl = document.getElementById('errorMessage');
+                
+                successEl.style.display = 'none';
+                errorEl.style.display = 'none';
+
+                if (type === 'success') {
+                    successEl.style.display = 'block';
+                    successEl.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                } else {
+                    errorEl.style.display = 'block';
+                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                }
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                if (!this.validateForm()) {
+                    this.showMessage('error', 'Please correct the errors and try again.');
+                    return;
+                }
+
+                if (this.lockoutTime > Date.now()) {
+                    this.showMessage('error', 'Account is temporarily locked.');
+                    return;
+                }
+
+                this.setLoading(true);
+
+                try {
+                    const formData = new FormData(this.form);
+                    const loginData = {
+                        email: formData.get('email'),
+                        password: formData.get('password'),
+                        rememberMe: formData.get('rememberMe') === 'on'
+                    };
+
+                    const result = await this.authenticateUser(loginData);
+
+                    if (result.success) {
+                        this.onLoginSuccess(result.user, loginData.rememberMe);
+                    } else {
+                        this.onLoginFailure(result.message);
+                    }
+
+                } catch (error) {
+                    this.showMessage('error', error.message || 'Login failed. Please try again.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            async authenticateUser(loginData) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Check registered users
+                const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                const user = registeredUsers.find(u => u.email === loginData.email);
+
+                if (!user) {
+                    return {
+                        success: false,
+                        message: 'Email not found. Please check your email or register for a new account.'
+                    };
+                }
+
+                // Simple password check (in real app, compare hashed passwords)
+                const hashedPassword = this.hashPassword(loginData.password);
+                if (user.hashedPassword !== hashedPassword) {
+                    return {
+                        success: false,
+                        message: 'Incorrect password. Please try again.'
+                    };
+                }
+
+                return {
+                    success: true,
+                    user: user
+                };
+            }
+
+            hashPassword(password) {
+                // Simple hash for demo - matches registration
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString();
+            }
+
+            onLoginSuccess(user, rememberMe) {
+                // Reset attempt count
+                this.attemptCount = 0;
+                localStorage.removeItem('loginAttempts');
+                localStorage.removeItem('lockoutTime');
+
+                // Store session
+                const sessionData = {
+                    user: user,
+                    loginTime: new Date().toISOString(),
+                    rememberMe: rememberMe
+                };
+
+                if (rememberMe) {
+                    localStorage.setItem('userSession', JSON.stringify(sessionData));
+                } else {
+                    sessionStorage.setItem('userSession', JSON.stringify(sessionData));
+                }
+
+                // Log login activity
+                this.logActivity({
+                    type: 'login',
+                    timestamp: new Date(),
+                    userId: user.id,
+                    success: true
+                });
+
+                this.showMessage('success', `Welcome back, ${user.firstName}! Redirecting...`);
+
+                // Redirect to welcome page or dashboard
+                setTimeout(() => {
+                    window.location.href = 'welcome.html';
+                }, 1500);
+            }
+
+            onLoginFailure(message) {
+                this.attemptCount++;
+                localStorage.setItem('loginAttempts', this.attemptCount.toString());
+
+                // Log failed attempt
+                this.logActivity({
+                    type: 'login',
+                    timestamp: new Date(),
+                    email: document.getElementById('email').value,
+                    success: false,
+                    reason: message
+                });
+
+                if (this.attemptCount >= this.maxAttempts) {
+                    // Lock account for 30 minutes
+                    this.lockoutTime = Date.now() + (30 * 60 * 1000);
+                    localStorage.setItem('lockoutTime', this.lockoutTime.toString());
+                    
+                    this.showMessage('error', `Too many failed attempts. Account locked for 30 minutes.`);
+                    this.submitBtn.disabled = true;
+                } else {
+                    const remainingAttempts = this.maxAttempts - this.attemptCount;
+                    this.showMessage('error', `${message} ${remainingAttempts} attempts remaining.`);
+                }
+            }
+
+            logActivity(activity) {
+                const activities = JSON.parse(localStorage.getItem('loginActivities') || '[]');
+                activities.unshift(activity);
+                
+                // Keep only last 50 activities
+                if (activities.length > 50) {
+                    activities.splice(50);
+                }
+                
+                localStorage.setItem('loginActivities', JSON.stringify(activities));
+            }
+
+            setLoading(loading) {
+                const submitText = document.getElementById('submitText');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                
+                if (loading) {
+                    submitText.style.display = 'none';
+                    loadingSpinner.style.display = 'block';
+                    this.submitBtn.disabled = true;
+                } else {
+                    submitText.style.display = 'block';
+                    loadingSpinner.style.display = 'none';
+                    this.submitBtn.disabled = this.lockoutTime > Date.now();
+                }
+            }
+        }
+
+        function togglePassword() {
+            const field = document.getElementById('password');
+            const icon = document.getElementById('passwordIcon');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                field.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function showForgotPassword() {
+            alert('Password reset functionality would be implemented here.\n\nThis would typically involve:\n1. Email verification\n2. Sending reset link\n3. New password creation\n\nPlease contact support for assistance.');
+        }
+
+        // Initialize login when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new Login();
+        });
+
+        // Check for existing session on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const sessionData = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+            
+            if (sessionData && sessionData.user) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'welcome.html';
+            }
+        });
+    </script>
+</body>
+</html>
