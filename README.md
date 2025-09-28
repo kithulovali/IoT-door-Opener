@@ -1,24 +1,25 @@
 # IoT-door-Opener
 
-![Door Opener Diagram](assets/initial_plan.png)
+![server development cercle](https://github.com/kithulovali/IoT-door-Opener/blob/server/assets/Development.png)
 
-## INPUT [ CAMERA /FACE RECOGNISATION]
+This above image is described by the algorithm bellow 
 
 ```
-{USER ON DOOR} CAMERA --------->SERVER --------> DOOR 
-{ADMIN REMOTE ACCESS} OFFICIAL WEBSITE -------> NEW USERS REGISTRATION ------> SAVED IN A DATABASE
+if (face == image){
+ arduino -> send Opendoor
+}else{
+ you are not allowed here 
+}
 ```
 
-## PROCES [SERVER frontend---> server ---> ]
+![Door opener diagram](assets/initial_plan.png)
 
-##### Django is used as a backend server .
+This diagram above shows the working  circle of the project itself
 
-##### The frontend by HTML and CSS for design .
+ - [X] Django is used as a backend server .
 
-##### Postgress is being used as the database .
+ - [X] The frontend by HTML and CSS for design .
 
-# OUTPUT [SERVER TO DOOR FACE RECOGNISE OR IGNORED]
-
-##### This is the final step where by the user either get in or ingored  .
-
-#### The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
+ - [X] Postgress is being used as the database  in production and sqlite for devellopment.
+ 
+The server can be acceded on the [Server branch](https://github.com/kithulovali/IoT-door-Opener/tree/server)
