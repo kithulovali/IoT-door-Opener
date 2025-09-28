@@ -6,9 +6,20 @@ from django.contrib.auth import login , logout
 from django.contrib.auth.decorators import login_required
 from .forms import ImageAccessForm
 from .models import ImagesAccess
+from .serializer import ImagesAcessSerializers
+from rest_framework.decorators import api_view 
+from rest_framework.response import Response
 # Create your views here.
 
+# api to the arduino board
+@api_view(['GET'])
+def user_images_api(request):
+    images = ImagesAccess.objects.all()
+    serializer = ImagesAcessSerializers(images , many=True ,context={'request':request})
+    return Response(serializer.data)
 
+#logout user
+@login_required
 def logoutUser(request):
     logout(request)
     return redirect("loginUser")
@@ -24,6 +35,7 @@ def loginPage(request):
     else :
         form = AuthenticationForm()
     return render(request , "WebServer/LoginPage.html",{"form" :form})
+
 def welcomePage(request):
     return render(request ,"WebServer/Welcome.html")
 
@@ -38,6 +50,8 @@ def registerPage(request):
         form = UserCreationForm()
     return render( request ,"WebServer/register.html",{"form":form})
 
+#profile for images upload
+@login_required
 def ProfilePage(request, id):
     profile_user = get_object_or_404(User, id=id)
     # Only allow user to access their own profile

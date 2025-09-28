@@ -7,7 +7,8 @@ urlpatterns = [
     path('', views.welcomePage , name = "welcomeUser"),
     path('register/' ,views.registerPage , name = "registerUser"),
     path('profile/<int:id>/', views.ProfilePage , name= "profileUser"),
-    path("logout/", views.logoutUser, name="logoutUser")
+    path('api/user-images/',views.user_images_api,name='user_images_api'),
+    path("logout/", views.logoutUser, name="logoutUser"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
