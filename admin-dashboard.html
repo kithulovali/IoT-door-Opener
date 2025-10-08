@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - IoT Door Opener</title>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="user-styles.css">
+  
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: rgba(255, 255, 255, 0.05);
+      /* Add vendor prefix for Safari support */
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h2 {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      color: var(--white);
+      text-decoration: none;
+      transition: var(--transition-fast);
+    }
+    
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-nav .logout {
+      margin-top: auto;
+      color: var(--danger-red);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 2rem;
+    }
+    
+    .welcome-badge {
+      background: rgba(59, 130, 246, 0.2);
+      padding: 0.25rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+    }
+    
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      /* Add vendor prefix for Safari support */
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+    
+    .stat-success { color: var(--success-green); }
+    .stat-warning { color: var(--warning-orange); }
+    .stat-danger { color: var(--danger-red); }
+    .stat-info { color: var(--info-blue); }
+    
+    /* Users Table */
+    .users-table-container {
+      overflow-x: auto;
+      margin-top: 1.5rem;
+    }
+    
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .users-table th {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .users-table td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .users-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--info-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    /* Modal */
+    .modal-content {
+      background: rgba(30, 30, 40, 0.95);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+      }
+      
+      .sidebar-header h2 span, .sidebar-nav a span {
+        display: none;
+      }
+      
+      .sidebar-header h2 {
+        justify-content: center;
+      }
+      
+      .main-content {
+        margin-left: 70px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 1rem;
+      }
+      
+      .sidebar-header {
+        display: none;
+      }
+      
+      .sidebar-nav {
+        flex-direction: row;
+      }
+      
+      .sidebar-nav .logout {
+        margin-top: 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>
+        <i class="bi bi-shield-lock"></i>
+        <span>Admin Panel</span>
+      </h2>
+    </div>
+    
+    <div class="sidebar-nav">
+      <a href="#" class="active">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#">
+        <i class="bi bi-people"></i>
+        <span>Users</span>
+      </a>
+      <a href="#">
+        <i class="bi bi-clipboard-data"></i>
+        <span>Logs</span>
+      </a>
+      <a href="#">
+        <i class="bi bi-gear"></i>
+        <span>Settings</span>
+      </a>
+      <a href="#" onclick="adminLogout()" class="logout">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Admin Dashboard</h1>
+      <div class="welcome-badge">
+        Welcome, <span id="adminName">Administrator</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="text-gray-300">Total Users</div>
+        <div class="stat-value stat-info" id="totalUsers">0</div>
+        <div class="text-gray-400">Active: <span id="activeSessions">0</span></div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="text-gray-300">Door Status</div>
+        <div class="stat-value stat-danger" id="adminDoorStatus">Locked</div>
+        <div class="text-gray-400">🔒 Secure</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="text-gray-300">System Status</div>
+        <div class="stat-value stat-success">Online</div>
+        <div class="text-gray-400">📧 Notifications Active</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>
+        <i class="bi bi-clipboard-data"></i> Recent Access Logs
+      </h3>
+      <div id="adminAccessLogs" class="text-gray-400">
+        <i class="bi bi-clock-history"></i> No recent activity
+      </div>
+      <div class="text-end mt-3">
+        <button class="btn btn-outline" onclick="clearLogs()">
+          <i class="bi bi-trash"></i> Clear Logs
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>
+          <i class="bi bi-people"></i> Registered Users
+        </h3>
+        <button class="btn btn-primary" onclick="showAddUserForm()">
+          <i class="bi bi-person-plus"></i> Add User
+        </button>
+      </div>
+      
+      <div class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersList">
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-sm">
+                  <div class="user-avatar">U</div>
+                  <span>User Name</span>
+                </div>
+              </td>
+              <td>username</td>
+              <td>user@example.com</td>
+              <td>
+                <span class="badge bg-success">Active</span>
+              </td>
+              <td>
+                <button class="btn btn-outline btn-sm" aria-label="Edit user">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-danger btn-sm ms-2" aria-label="Delete user">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      <p>&copy; <span id="currentYear"></span> IoT Door Pro. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-person-plus"></i> Add New User
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="addUserForm" class="modal-body">
+          <div class="mb-3">
+            <label for="newUserName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="newUserName" required placeholder="Enter full name">
+          </div>
+          <div class="mb-3">
+            <label for="newUserUsername" class="form-label">Username</label>
+            <input type="text" class="form-control" id="newUserUsername" required placeholder="Enter username">
+          </div>
+          <div class="mb-3">
+            <label for="newUserEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="newUserEmail" required placeholder="Enter email">
+          </div>
+          <div class="mb-3">
+            <label for="newUserPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="newUserPassword" required placeholder="Enter password">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-person-plus"></i> Add User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="simple-core.js"></script>
+  <script>
+    // Set current year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    // Initialize admin name
+    document.getElementById('adminName').textContent = 'Administrator';
+    
+    // Initialize stats
+    document.getElementById('totalUsers').textContent = '12';
+    document.getElementById('activeSessions').textContent = '3';
+    document.getElementById('adminDoorStatus').innerHTML = '<i class="bi bi-lock"></i> Locked';
+    
+    function showAddUserForm() {
+      const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+      modal.show();
+    }
+    
+    function clearLogs() {
+      document.getElementById('adminAccessLogs').innerHTML = '<i class="bi bi-check-circle text-success"></i> Logs cleared successfully';
+      setTimeout(() => {
+        document.getElementById('adminAccessLogs').innerHTML = '<i class="bi bi-clock-history"></i> No recent activity';
+      }, 3000);
+    }
+    
+    function adminLogout() {
+      // Clear admin session
+      localStorage.removeItem('adminSession');
+      // Redirect to admin login
+      window.location.href = 'admin-login.html';
+    }
+  </script>
+</body>
+</html>

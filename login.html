@@ -1,403 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Smart Door Access System</title>
-    <link rel="stylesheet" href="user-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: var(--spacing-lg);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - IoT Door Opener</title>
 
-        .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-2xl);
-            padding: var(--spacing-2xl);
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: var(--spacing-xl);
-        }
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
 
-        .auth-logo {
-            font-size: 3rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--spacing-md);
-        }
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="user-styles.css">
 
-        .auth-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .auth-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: var(--spacing-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            transition: var(--transition-fast);
-            background: var(--white);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .form-input.error {
-            border-color: var(--danger-color);
-        }
-
-        .form-error {
-            color: var(--danger-color);
-            font-size: 0.875rem;
-            margin-top: var(--spacing-xs);
-        }
-
-        .password-field {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: var(--spacing-md);
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin: 0;
-        }
-
-        .checkbox-group label {
-            margin: 0;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .forgot-password {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: var(--spacing-md);
-            background: var(--primary-gradient);
-            color: var(--white);
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            margin-bottom: var(--spacing-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .auth-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .auth-links {
-            text-align: center;
-        }
-
-        .auth-links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--white);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .success-message {
-            background: rgba(5, 150, 105, 0.1);
-            border: 1px solid rgba(5, 150, 105, 0.3);
-            color: var(--success-color);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-lg);
-            display: none;
-        }
-
-        .error-message {
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            color: var(--danger-color);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-lg);
-            display: none;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: var(--spacing-lg) 0;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
-        }
-
-        .divider span {
-            margin: 0 var(--spacing-md);
-        }
-
-
-
-        .security-info {
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            color: var(--info-color);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-lg);
-            font-size: 0.875rem;
-        }
-
-        .security-info i {
-            margin-right: var(--spacing-sm);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .auth-container {
-                padding: var(--spacing-md);
-            }
-
-            .auth-card {
-                padding: var(--spacing-lg);
-                max-width: 100%;
-                margin: 0;
-            }
-
-            .auth-logo {
-                font-size: 2.5rem;
-            }
-
-            .auth-title {
-                font-size: 1.75rem;
-            }
-
-            .auth-subtitle {
-                font-size: 0.9rem;
-            }
-
-            .form-input {
-                padding: var(--spacing-sm);
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-
-            .form-options {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--spacing-sm);
-            }
-
-            .auth-btn {
-                padding: var(--spacing-md);
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: var(--spacing-sm);
-            }
-
-            .auth-card {
-                padding: var(--spacing-md);
-            }
-
-            .auth-logo {
-                font-size: 2rem;
-            }
-
-            .auth-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Touch-friendly improvements */
-        @media (hover: none) and (pointer: coarse) {
-            .auth-btn {
-                min-height: 44px;
-            }
-
-            .password-toggle {
-                min-width: 44px;
-                min-height: 44px;
-                padding: var(--spacing-sm);
-            }
-
-            .checkbox-group input[type="checkbox"] {
-                min-width: 20px;
-                min-height: 20px;
-            }
-        }
-    </style>
+  <style>
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .auth-card {
+      max-width: 450px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .password-toggle {
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    
+    .demo-credentials {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-door-open"></i>
-                </div>
-                <h1 class="auth-title">Welcome Back</h1>
-                <p class="auth-subtitle">Sign in to access the Smart Door System</p>
-            </div>
-
-            <div class="success-message" id="successMessage"></div>
-            <div class="error-message" id="errorMessage"></div>
-
-            <form id="loginForm" novalidate>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-input" required autocomplete="email">
-                    <div class="form-error" id="emailError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-field">
-                        <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password">
-                        <button type="button" class="password-toggle" onclick="togglePassword()" title="Toggle password visibility" aria-label="Toggle password visibility">
-                            <i class="fas fa-eye" id="passwordIcon"></i>
-                        </button>
-                    </div>
-                    <div class="form-error" id="passwordError"></div>
-                </div>
-
-                <div class="form-options">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="rememberMe" name="rememberMe">
-                        <label for="rememberMe">Remember me</label>
-                    </div>
-                    <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="auth-btn" id="submitBtn">
-                    <span id="submitText">Sign In</span>
-                    <div class="loading-spinner" id="loadingSpinner"></div>
-                </button>
-            </form>
-
-            <div class="security-info">
-                <i class="fas fa-shield-alt"></i>
-                Your login is secured with encryption and monitored for security.
-            </div>
-
-            <div class="divider">
-                <span>Don't have an account?</span>
-            </div>
-
-            <div class="auth-links">
-                <p><a href="register.html">Create New Account</a></p>
-            </div>
+  <div class="login-container">
+    <div class="auth-card">
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="bi bi-house-door-fill display-3 text-info"></i>
         </div>
-    </div>
+        <h2>Welcome Back</h2>
+        <p class="text-gray-200">Sign in to your IoT Door Control account</p>
+      </div>
 
-    <script src="user-script.js"></script>
-    <script src="security-framework.js"></script>
-    <script src="theme-language.js"></script>
-    <script src="enhanced-login.js"></script>
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="loginIdentifier" class="form-label">
+            <i class="bi bi-person me-2"></i>Username or Email
+          </label>
+          <input type="text" class="form-control"
+            id="loginIdentifier" name="username" required
+            placeholder="Enter username or email">
+        </div>
+
+        <div class="mb-4">
+          <label for="loginPassword" class="form-label">
+            <i class="bi bi-lock me-2"></i>Password
+          </label>
+          <div class="position-relative">
+            <input type="password" class="form-control"
+              id="loginPassword" name="password" required
+              placeholder="Enter your password">
+            <button type="button" class="password-toggle position-absolute end-0 top-0 h-100"
+              onclick="togglePassword('loginPassword')" aria-label="Toggle password visibility">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4 form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe">
+          <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+
+        <div class="d-grid mb-3">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+          </button>
+        </div>
+      </form>
+
+      <!-- Demo Credentials -->
+      <div class="demo-credentials">
+        <h6 class="mb-2">
+          <i class="bi bi-info-circle me-2"></i> Demo Credentials
+        </h6>
+        <div class="text-center">
+          <strong>Username:</strong> demo<br>
+          <strong>Password:</strong> demo123
+        </div>
+      </div>
+
+      <!-- Additional Links -->
+      <div class="text-center">
+        <p class="text-gray-200 mb-3">
+          Don't have an account?
+          <a href="register.html" class="text-info fw-semibold">Create one</a>
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="index.html" class="btn btn-outline">
+            <i class="bi bi-arrow-left me-1"></i> Back to Home
+          </a>
+          <a href="admin-login.html" class="btn btn-warning">
+            <i class="bi bi-shield-lock me-1"></i> Admin Portal
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Toggle Password Script -->
+  <script>
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = input.nextElementSibling.querySelector('i');
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye';
+      }
+    }
+  </script>
 </body>
 </html>

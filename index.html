@@ -3,554 +3,432 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Door Access System</title>
+    <title>IoT Door Opener System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="user-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .landing-container {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: var(--spacing-xl);
+        /* Hero Section */
+        .hero-section {
+            padding-top: 100px;
+            padding-bottom: 100px;
+            position: relative;
+            overflow: hidden;
         }
-
-        .landing-logo {
-            font-size: 5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--spacing-lg);
-            text-shadow: none;
+        
+        /* Floating Background Shapes */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
         }
-
-        .landing-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-md);
-            text-shadow: none;
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
-
-        .landing-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: var(--spacing-2xl);
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .landing-actions {
-            display: flex;
-            gap: var(--spacing-lg);
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: var(--spacing-2xl);
-        }
-
-        .landing-btn {
-            padding: var(--spacing-md) var(--spacing-xl);
-            border-radius: var(--radius-lg);
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            min-width: 180px;
-            justify-content: center;
-        }
-
-        .landing-btn.primary {
-            background: var(--white);
-            color: var(--primary-color);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .landing-btn.primary:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-2xl);
-        }
-
-        .landing-btn.secondary {
-            background: var(--white);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-            box-shadow: var(--shadow-md);
-        }
-
-        .landing-btn.secondary:hover {
-            background: var(--bg-secondary);
-            border-color: var(--border-dark);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--spacing-xl);
-            max-width: 1000px;
-            width: 100%;
-            margin-bottom: var(--spacing-2xl);
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.95);
+        
+        .shape-1 { width: 80px; height: 80px; top: 10%; left: 5%; animation-delay: 0s; }
+        .shape-2 { width: 120px; height: 120px; top: 20%; right: 10%; animation-delay: -2s; }
+        .shape-3 { width: 60px; height: 60px; bottom: 30%; left: 15%; animation-delay: -4s; }
+        .shape-4 { width: 100px; height: 100px; bottom: 20%; right: 20%; animation-delay: -6s; }
+        
+        /* Device Mockup */
+        .device-mockup-bs {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            /* Add vendor prefix for Safari support */
             -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-xl);
-            text-align: center;
-            transition: var(--transition-fast);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-2xl);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .feature-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-
-
-        .footer {
-            margin-top: auto;
-            padding-top: var(--spacing-xl);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        @media (max-width: 768px) {
-            .landing-title {
-                font-size: 2.5rem;
-            }
-
-            .landing-subtitle {
-                font-size: 1.1rem;
-                margin-bottom: var(--spacing-xl);
-            }
-
-            .landing-container {
-                padding: var(--spacing-md);
-            }
-
-            .landing-actions {
-                flex-direction: column;
-                align-items: center;
-                gap: var(--spacing-md);
-            }
-
-            .landing-btn {
-                width: 100%;
-                max-width: 300px;
-                padding: var(--spacing-md) var(--spacing-lg);
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-lg);
-                margin-bottom: var(--spacing-xl);
-            }
-
-            .feature-card {
-                padding: var(--spacing-lg);
-            }
-
-            .feature-icon {
-                font-size: 2rem;
-            }
-
-            .feature-title {
-                font-size: 1.1rem;
-            }
-
-            .footer {
-                padding-top: var(--spacing-lg);
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .landing-logo {
-                font-size: 3rem;
-            }
-
-            .landing-title {
-                font-size: 2rem;
-            }
-
-            .landing-subtitle {
-                font-size: 1rem;
-                margin-bottom: var(--spacing-lg);
-            }
-
-            .landing-container {
-                padding: var(--spacing-sm);
-            }
-
-            .landing-btn {
-                font-size: 0.9rem;
-                padding: var(--spacing-sm) var(--spacing-md);
-            }
-
-            .feature-card {
-                padding: var(--spacing-md);
-            }
-
-            .feature-icon {
-                font-size: 1.8rem;
-                margin-bottom: var(--spacing-sm);
-            }
-
-            .feature-title {
-                font-size: 1rem;
-                margin-bottom: var(--spacing-xs);
-            }
-
-            .feature-description {
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Touch-friendly improvements */
-        @media (hover: none) and (pointer: coarse) {
-            .landing-btn {
-                min-height: 44px;
-            }
-
-            .feature-card {
-                min-height: 44px;
-                cursor: pointer;
-            }
-        }
-
-        /* Landscape mobile optimization */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .landing-container {
-                padding: var(--spacing-sm) var(--spacing-md);
-            }
-
-            .landing-title {
-                font-size: 2rem;
-                margin-bottom: var(--spacing-sm);
-            }
-
-            .landing-subtitle {
-                font-size: 1rem;
-                margin-bottom: var(--spacing-md);
-            }
-
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-                margin-bottom: var(--spacing-md);
-            }
-
-            .footer {
-                padding-top: var(--spacing-md);
-            }
-        }
-
-        /* High contrast mode */
-        @media (prefers-contrast: high) {
-            .feature-card {
-                border: 2px solid var(--text-primary);
-            }
-
-            .landing-btn {
-                border: 2px solid currentColor;
-            }
-        }
-
-        /* Loading overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Enhanced Contact Info Styles */
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-md);
-        }
-        
-        .contact-item {
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: device-float 6s ease-in-out infinite;
         }
         
-        .contact-item i {
-            color: var(--primary-color);
-            width: 16px;
-            text-align: center;
+        @keyframes device-float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
         
+        .device-screen-bs {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .animated-icon {
+            animation: icon-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes icon-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(16, 185, 129, 0.8), 0 0 60px rgba(16, 185, 129, 0.3); }
+        }
+        
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(16, 185, 129, 0.6);
+            border-radius: 50%;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+        }
+        
+        /* Features */
+        .feature-card-bs {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card-bs:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon-wrapper {
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card-bs:hover .feature-icon-wrapper {
+            transform: scale(1.1);
+        }
+        
+        /* Testimonial */
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .contact-info {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-sm);
+            .hero-section {
+                padding-top: 120px;
+                padding-bottom: 60px;
+            }
+            
+            .device-mockup-bs {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .device-screen-bs {
+                width: 170px;
+                height: 170px;
+            }
+            
+            .shape-1, .shape-2, .shape-3, .shape-4 {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="landing-container">
-        <div class="landing-logo">
-            <i class="fas fa-door-open"></i>
-        </div>
-        
-        <h1 class="landing-title">Smart Door Access</h1>
-        <p class="landing-subtitle">
-            An IoT-powered door access control system using face recognition technology. 
-            Integrating camera capture, Django REST API backend, Arduino hardware control, 
-            and automated door mechanisms for secure, contactless building access.
-        </p>
-
-        <div class="landing-actions">
-            <a href="login.html" class="landing-btn primary">
-                <i class="fas fa-sign-in-alt"></i>
-                Sign In
+    <!-- Professional Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-nav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-house-door fs-2 me-2 text-gradient"></i>
+                <span class="fw-bold">IoT Door Pro</span>
             </a>
-            <a href="register.html" class="landing-btn secondary">
-                <i class="fas fa-user-plus"></i>
-                Create Account
-            </a>
-            <button class="landing-btn secondary" onclick="showDemoAccess()">
-                <i class="fas fa-play"></i>
-                Quick Demo
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#demo">Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="login.html" class="btn btn-outline btn-sm ms-2">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin-login.html" class="btn btn-primary btn-sm ms-2">
+                            <i class="bi bi-shield-lock me-1"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-camera"></i>
+    <!-- Hero Section -->
+    <section class="hero-section position-relative" id="home">
+        <!-- Floating Background Shapes -->
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+        
+        <div class="container position-relative">
+            <div class="row align-items-center min-vh-75">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <span class="badge bg-primary bg-gradient mb-3 px-3 py-2">
+                            <i class="bi bi-lightning-charge me-1"></i>
+                            Next-Gen IoT Technology
+                        </span>
+                        <h1 class="display-2 fw-bold mb-4">
+                            Smart Door Control 
+                            <span class="text-gradient">Redefined</span>
+                        </h1>
+                        <p class="lead text-gray-200 mb-4">
+                            Experience the future of home security with our cutting-edge IoT door control system. 
+                            Seamlessly manage access, monitor visitors, and secure your space with intelligent automation.
+                        </p>
+                        
+                        <!-- Statistics Row -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-4">
+                                <div class="glass-card stats-card text-center p-3">
+                                    <div class="fs-4 fw-bold">99.9%</div>
+                                    <small class="text-gray-300">Uptime</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="glass-card stats-card text-center p-3">
+                                    <div class="fs-4 fw-bold">24/7</div>
+                                    <small class="text-gray-300">Monitoring</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="glass-card stats-card text-center p-3">
+                                    <div class="fs-4 fw-bold">Instant</div>
+                                    <small class="text-gray-300">Alerts</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- CTA Buttons -->
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="login.html" class="btn btn-primary btn-lg px-4 py-3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Get Started
+                            </a>
+                            <a href="register.html" class="btn btn-outline btn-lg px-4 py-3">
+                                <i class="bi bi-person-plus me-2"></i>
+                                Register Now
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="feature-title">Camera Integration</h3>
-                <p class="feature-description">
-                    Real-time camera capture for face detection and recognition with high-quality image processing.
-                </p>
+                
+                <div class="col-lg-6">
+                    <div class="hero-visual text-center">
+                        <div class="device-mockup-bs position-relative">
+                            <div class="device-screen-bs">
+                                <div class="screen-content text-center">
+                                    <i class="bi bi-house-door display-1 text-success mb-3 animated-icon"></i>
+                                    <div class="badge bg-success bg-gradient px-3 py-2 mb-3">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        SECURED
+                                    </div>
+                                    <div class="pulse-rings">
+                                        <div class="pulse-ring"></div>
+                                        <div class="pulse-ring" style="animation-delay: 0.5s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-server"></i>
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="display-4 fw-bold mb-3">Powerful Features</h2>
+                    <p class="lead text-gray-200">Discover what makes our IoT Door Opener the perfect choice for modern smart homes</p>
                 </div>
-                <h3 class="feature-title">Django REST API</h3>
-                <p class="feature-description">
-                    Powerful backend API for user management, face recognition processing, and access control logic.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <h3 class="feature-title">Arduino Control</h3>
-                <p class="feature-description">
-                    Hardware integration with Arduino microcontroller for physical door mechanism control.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-door-open"></i>
-                </div>
-                <h3 class="feature-title">Automated Door</h3>
-                <p class="feature-description">
-                    Seamless door actuator control for secure, contactless access based on facial recognition results.
-                </p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-shield-alt"></i>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="feature-card-bs glass-card h-100 p-4 text-center position-relative">
+                        <div class="feature-icon-wrapper mb-4">
+                            <i class="bi bi-shield-lock display-3 text-primary"></i>
+                        </div>
+                        <h4 class="mb-3">Advanced Security</h4>
+                        <p class="text-gray-300 mb-4">Military-grade encryption and biometric authentication ensure your home stays protected with state-of-the-art security protocols.</p>
+                        <div class="badge bg-warning text-dark position-absolute top-0 end-0 m-3">
+                            <i class="bi bi-star-fill me-1"></i>
+                            Premium
+                        </div>
+                        <ul class="list-unstyled text-start text-gray-300 small">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>End-to-end encryption</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Biometric access</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Intrusion detection</li>
+                        </ul>
+                    </div>
                 </div>
-                <h3 class="feature-title">Advanced Security</h3>
-                <p class="feature-description">
-                    Multi-layered security with password strength validation, session management, and account lockout protection.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-globe"></i>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card-bs glass-card h-100 p-4 text-center">
+                        <div class="feature-icon-wrapper mb-4">
+                            <i class="bi bi-camera-video display-3 text-info"></i>
+                        </div>
+                        <h4 class="mb-3">Smart Monitoring</h4>
+                        <p class="text-gray-300 mb-4">AI-powered cameras with real-time facial recognition and motion detection keep you informed of every visitor.</p>
+                        <ul class="list-unstyled text-start text-gray-300 small">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>4K video quality</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Night vision</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Motion alerts</li>
+                        </ul>
+                    </div>
                 </div>
-                <h3 class="feature-title">Multi-Language</h3>
-                <p class="feature-description">
-                    Available in English, Swahili, and French with seamless language switching capabilities.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card-bs glass-card h-100 p-4 text-center">
+                        <div class="feature-icon-wrapper mb-4">
+                            <i class="bi bi-phone display-3 text-success"></i>
+                        </div>
+                        <h4 class="mb-3">Remote Control</h4>
+                        <p class="text-gray-300 mb-4">Control your door from anywhere in the world with our intuitive mobile app and instant notifications.</p>
+                        <ul class="list-unstyled text-start text-gray-300 small">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Global access</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Push notifications</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Voice control</li>
+                        </ul>
+                    </div>
                 </div>
-                <h3 class="feature-title">Analytics & Reports</h3>
-                <p class="feature-description">
-                    Comprehensive access analytics with export functionality in PDF, Excel, and CSV formats.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 class="feature-title">Advanced Search</h3>
-                <p class="feature-description">
-                    Powerful search and filtering capabilities across all access history and system data.
-                </p>
             </div>
         </div>
-
-
-
-        <div class="footer">
-            <p>&copy; 2025 Smart Door Access System. Developed by Group 2.</p>
-            <p>Contact: group2@gmail.com | Phone: 0761365727</p>
+    </section>
+    
+    <!-- Demo Section -->
+    <section id="demo" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="glass-card p-5 text-center">
+                        <h3 class="display-5 fw-bold mb-4">Ready to Experience the Future?</h3>
+                        <p class="lead text-gray-200 mb-4">Join thousands of satisfied customers who have upgraded to smart door control</p>
+                        
+                        <div class="row g-3 justify-content-center">
+                            <div class="col-auto">
+                                <a href="login.html" class="btn btn-primary btn-lg px-5 py-3">
+                                    <i class="bi bi-play-circle me-2"></i>
+                                    Try Demo Now
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <a href="register.html" class="btn btn-outline btn-lg px-5 py-3">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Create Account
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Testimonial -->
+                        <div class="mt-5">
+                            <div class="testimonial-card glass-card p-4">
+                                <blockquote class="blockquote mb-0">
+                                    <p class="text-gray-200 fst-italic">"This IoT door system has revolutionized how I manage home security. The interface is incredibly intuitive and the features are enterprise-grade."</p>
+                                    <footer class="blockquote-footer text-gray-300 mt-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="rounded-circle bg-info d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                <span class="text-white fw-bold">SJ</span>
+                                            </div>
+                                            <div class="text-start">
+                                                <cite title="Source Title">Sarah Johnson</cite>
+                                                <div class="small">Tech Executive</div>
+                                            </div>
+                                        </div>
+                                    </footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-gray-300 mb-0">
+                        &copy; <span id="currentYear"></span> IoT Door Pro | 
+                        <a href="mailto:support@iotdoor.com" class="text-gray-300 text-decoration-none">support@iotdoor.com</a>
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-gray-300 mb-0">
+                        <span>+1 (555) 123-4567</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="simple-core.js"></script>
     <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
         // Check if user is already logged in
-        document.addEventListener('DOMContentLoaded', () => {
-            checkExistingSession();
-        });
-
-        function checkExistingSession() {
-            const sessionData = JSON.parse(
-                localStorage.getItem('userSession') || 
-                sessionStorage.getItem('userSession') || 
-                'null'
-            );
-
-            if (sessionData && sessionData.user) {
-                // User is already logged in, redirect to welcome page
-                showLoading();
-                setTimeout(() => {
-                    window.location.href = 'welcome.html';
-                }, 1000);
-            }
+        const session = getUserSession();
+        if (session) {
+            window.location.href = 'welcome.html';
         }
         
-        function showDemoAccess() {
-            const demoMessage = `
-🚪 Smart Door Access Demo
-
-This system provides:
-
-🔐 Security Features:
-• Password strength validation
-• Account lockout protection
-• Session timeout management
-• Activity logging & monitoring
-• Encrypted data storage
-
-🎨 User Experience:
-• Dark/Light theme support
-• Multi-language (EN/SW/FR)
-• Advanced search & filtering
-• Export (PDF/Excel/CSV)
-• Professional UI design
-
-🔧 Core Features:
-• Face recognition access
-• Real-time camera integration
-• Django REST API backend
-• Arduino hardware control
-• Automated door mechanisms
-
-📊 Analytics:
-• Access history tracking
-• Success rate monitoring
-• Usage statistics
-• Security audit logs
-
-To experience the full system:
-1. Create an account (Register)
-2. Complete your profile
-3. Access the main dashboard
-4. Try face recognition access
-
-Contact: group2@gmail.com | 0761365727
-            `;
-            
-            alert(demoMessage);
-        }
-
-
-
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        // Smooth scroll behavior for better UX
+        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -563,36 +441,16 @@ Contact: group2@gmail.com | 0761365727
                 }
             });
         });
-
-        // Add some interactive effects
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-8px) scale(1.02)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.classList.contains('landing-btn')) {
-                e.target.click();
+        
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
         });
-
-        // Add loading states to navigation buttons
-        document.querySelectorAll('.landing-btn:not([onclick])').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                if (!btn.classList.contains('loading')) {
-                    btn.classList.add('loading');
-                    showLoading();
-                }
-            });
-        });
     </script>
-    <script src="security-framework.js"></script>
-    <script src="theme-language.js"></script>
 </body>
 </html>

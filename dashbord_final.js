@@ -17,13 +17,11 @@ class UserPortal {
             status: 'Inactive'
         };
         
-        // Enhanced features
+        // New features
         this.currentTheme = localStorage.getItem('theme') || 'light';
         this.currentLanguage = localStorage.getItem('language') || 'en';
         this.emailSettings = JSON.parse(localStorage.getItem('emailSettings') || '{}');
-        this.searchSystem = null;
-        this.exportSystem = null;
-        this.themeManager = null;
+        this.translations = this.loadTranslations();
         
         this.init();
     }
@@ -203,11 +201,6 @@ class UserPortal {
             this.hideModal('emailSettingsModal');
         });
 
-        // Logout button
-        document.getElementById('logoutBtn')?.addEventListener('click', () => {
-            this.logout();
-        });
-
         // Close modals on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -356,27 +349,46 @@ class UserPortal {
     // Access Functions
     async startCamera() {
         try {
-            if (window.enhancedCameraController) {
-                await window.enhancedCameraController.startCamera();
-                this.updateAccessStatus('Camera Active - Ready for Recognition');
-                this.isCameraActive = true;
-                
-                // Show face recognition instructions
-                this.showFaceRecognitionInstructions();
-            } else {
-                throw new Error('Face recognition system not available');
-            }
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
+                    facingMode: 'user'
+                } 
+            });
+            
+            this.cameraStream = stream;
+            const video = document.getElementById('videoStream');
+            video.srcObject = stream;
+            video.classList.remove('hidden');
+            
+            document.querySelector('.camera-placeholder').style.display = 'none';
+            document.getElementById('startCameraBtn').disabled = true;
+            document.getElementById('captureBtn').disabled = false;
+            document.getElementById('stopCameraBtn').disabled = false;
+            
+            this.updateAccessStatus('Camera Active');
+            this.isCameraActive = true;
             
         } catch (error) {
             console.error('Error accessing camera:', error);
-            this.showAccessResult('error', 'Camera Error', error.message);
+            this.showAccessResult('error', 'Camera Error', 'Unable to access camera. Please check permissions.');
         }
     }
 
     stopCamera() {
-        if (window.enhancedCameraController) {
-            window.enhancedCameraController.stopCamera();
+        if (this.cameraStream) {
+            this.cameraStream.getTracks().forEach(track => track.stop());
+            this.cameraStream = null;
         }
+        
+        const video = document.getElementById('videoStream');
+        video.classList.add('hidden');
+        document.querySelector('.camera-placeholder').style.display = 'flex';
+        
+        document.getElementById('startCameraBtn').disabled = false;
+        document.getElementById('captureBtn').disabled = true;
+        document.getElementById('stopCameraBtn').disabled = true;
         
         this.updateAccessStatus('Ready');
         this.isCameraActive = false;
@@ -392,79 +404,55 @@ class UserPortal {
             return;
         }
         
+        const video = document.getElementById('videoStream');
+        const canvas = document.getElementById('captureCanvas');
+        const context = canvas.getContext('2d');
+        
+        // Set canvas dimensions to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw current video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to blob
+        const imageBlob = await new Promise(resolve => {
+            canvas.toBlob(resolve, 'image/jpeg', 0.8);
+        });
+        
         // Show loading state
         document.getElementById('captureBtn').classList.add('loading');
-        this.updateAccessStatus('Analyzing face...');
+        this.updateAccessStatus('Processing...');
         
         try {
-            // Use enhanced face recognition system
-            if (window.enhancedCameraController) {
-                const result = await window.enhancedCameraController.captureForAccess();
-                
-                if (result.success) {
-                    // Verify the recognized user matches the logged-in user
-                    if (result.userId === this.currentUser.id || result.userInfo.email === this.currentUser.email) {
-                        this.showAccessResult('success', 'Access Granted', 
-                            `Welcome, ${result.userInfo.firstName}! Confidence: ${Math.round(result.confidence * 100)}%`);
-                        
-                        // Log successful access
-                        this.addAccessHistory({
-                            timestamp: new Date(),
-                            status: 'success',
-                            location: 'Main Entrance',
-                            confidence: Math.round(result.confidence * 100),
-                            userName: result.userInfo.firstName + ' ' + result.userInfo.lastName,
-                            method: 'face_recognition',
-                            userId: result.userId
-                        });
-                        
-                        // Simulate door unlock
-                        this.simulateDoorUnlock();
-                    } else {
-                        // Face recognized but doesn't match logged-in user
-                        this.showAccessResult('error', 'Access Denied', 
-                            'Face recognized as different user. Please log in with the correct account.');
-                        
-                        this.addAccessHistory({
-                            timestamp: new Date(),
-                            status: 'failed',
-                            location: 'Main Entrance',
-                            confidence: Math.round(result.confidence * 100),
-                            reason: 'User mismatch',
-                            method: 'face_recognition'
-                        });
-                    }
-                } else {
-                    this.showAccessResult('error', 'Access Denied', result.message);
-                    
-                    this.addAccessHistory({
-                        timestamp: new Date(),
-                        status: 'failed',
-                        location: 'Main Entrance',
-                        confidence: Math.round(result.confidence * 100),
-                        reason: result.message,
-                        method: 'face_recognition'
-                    });
-                }
+            // Simulate API call
+            const result = await this.processFaceRecognition(imageBlob);
+            
+            if (result.success) {
+                this.showAccessResult('success', 'Access Granted', `Welcome, ${result.userName}!`);
+                this.addAccessHistory({
+                    timestamp: new Date(),
+                    status: 'success',
+                    location: 'Main Entrance',
+                    confidence: result.confidence,
+                    userName: result.userName
+                });
             } else {
-                throw new Error('Face recognition system not available');
+                this.showAccessResult('error', 'Access Denied', result.message);
+                this.addAccessHistory({
+                    timestamp: new Date(),
+                    status: 'failed',
+                    location: 'Main Entrance',
+                    confidence: result.confidence,
+                    reason: result.message
+                });
             }
             
         } catch (error) {
             console.error('Face recognition error:', error);
-            this.showAccessResult('error', 'System Error', error.message);
-            
-            this.addAccessHistory({
-                timestamp: new Date(),
-                status: 'failed',
-                location: 'Main Entrance',
-                confidence: 0,
-                reason: 'System error: ' + error.message,
-                method: 'face_recognition'
-            });
+            this.showAccessResult('error', 'System Error', 'Unable to process request. Please try again.');
         } finally {
             document.getElementById('captureBtn').classList.remove('loading');
-            this.updateAccessStatus('Camera Active - Ready for Recognition');
         }
     }
 
@@ -569,12 +557,6 @@ class UserPortal {
 
     addAccessHistory(entry) {
         this.accessHistory.unshift(entry);
-        
-        // Save to localStorage for persistence
-        if (this.currentUser.id) {
-            localStorage.setItem(`accessHistory_${this.currentUser.id}`, JSON.stringify(this.accessHistory));
-        }
-        
         this.updateHistoryTable();
         this.updateDashboard();
     }
@@ -663,39 +645,18 @@ class UserPortal {
     viewAccessDetails(timestamp) {
         const entry = this.accessHistory.find(e => e.timestamp.getTime() == timestamp);
         if (entry) {
-            alert(`Access Details:
-
-Date: ${this.formatDateTime(entry.timestamp)}
-Status: ${entry.status}
-Location: ${entry.location}
-Confidence: ${entry.confidence}%
-${entry.reason ? `Reason: ${entry.reason}` : ''}`);
+            alert(`Access Details:\n\nDate: ${this.formatDateTime(entry.timestamp)}\nStatus: ${entry.status}\nLocation: ${entry.location}\nConfidence: ${entry.confidence}%\n${entry.reason ? `Reason: ${entry.reason}` : ''}`);
         }
     }
 
     // Profile Functions
     loadProfileData() {
-        const firstName = this.currentUser.name.split(' ')[0] || '';
-        const lastName = this.currentUser.name.split(' ').slice(1).join(' ') || '';
-        
-        document.getElementById('firstName').value = firstName;
-        document.getElementById('lastName').value = lastName;
+        document.getElementById('firstName').value = this.currentUser.name.split(' ')[0] || '';
+        document.getElementById('lastName').value = this.currentUser.name.split(' ')[1] || '';
         document.getElementById('email').value = this.currentUser.email || '';
         document.getElementById('phone').value = this.currentUser.phone || '';
         document.getElementById('department').value = this.currentUser.department || '';
         document.getElementById('employeeId').value = this.currentUser.employeeId || '';
-        
-        // Update profile status indicator
-        const profileStatus = document.getElementById('profileStatus');
-        if (profileStatus) {
-            if (this.currentUser.name && this.currentUser.email) {
-                profileStatus.textContent = 'Active';
-                profileStatus.className = 'badge badge-success';
-            } else {
-                profileStatus.textContent = 'Incomplete';
-                profileStatus.className = 'badge badge-warning';
-            }
-        }
     }
 
     updateProfile() {
@@ -711,66 +672,8 @@ ${entry.reason ? `Reason: ${entry.reason}` : ''}`);
         };
         
         this.currentUser = updatedUser;
-        
-        // Update session data
-        const sessionData = JSON.parse(
-            localStorage.getItem('userSession') || 
-            sessionStorage.getItem('userSession') || 
-            'null'
-        );
-        
-        if (sessionData) {
-            sessionData.user = {
-                ...sessionData.user,
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                department: formData.get('department'),
-                employeeId: formData.get('employeeId') || this.generateEmployeeId()
-            };
-            
-            // Update both storage types
-            if (localStorage.getItem('userSession')) {
-                localStorage.setItem('userSession', JSON.stringify(sessionData));
-            }
-            if (sessionStorage.getItem('userSession')) {
-                sessionStorage.setItem('userSession', JSON.stringify(sessionData));
-            }
-            
-            // Update registered users list
-            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-            const userIndex = registeredUsers.findIndex(u => u.id === sessionData.user.id || u.email === sessionData.user.email);
-            if (userIndex !== -1) {
-                registeredUsers[userIndex] = {
-                    ...registeredUsers[userIndex],
-                    firstName: formData.get('firstName'),
-                    lastName: formData.get('lastName'),
-                    phone: formData.get('phone'),
-                    department: formData.get('department'),
-                    employeeId: formData.get('employeeId') || this.generateEmployeeId()
-                };
-                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-            }
-            
-            // Register/update face data if face recognition system is available
-            if (window.faceRecognitionSystem && sessionData.user.id) {
-                this.registerUserFaceData(sessionData.user.id, sessionData.user);
-            }
-        }
-        
         this.updateUserInfo();
         this.showNotification('Profile Updated', 'Your profile has been successfully updated.', 'success');
-        
-        // Add activity for profile update
-        this.addAccessHistory({
-            timestamp: new Date(),
-            status: 'success',
-            location: 'Profile Settings',
-            confidence: 100,
-            userName: this.currentUser.name,
-            type: 'profile_update'
-        });
     }
 
     resetProfileForm() {
@@ -994,36 +897,7 @@ ${entry.reason ? `Reason: ${entry.reason}` : ''}`);
     }
 
     loadUserData() {
-        // Check for active session and load user data
-        const sessionData = JSON.parse(
-            localStorage.getItem('userSession') || 
-            sessionStorage.getItem('userSession') || 
-            'null'
-        );
-        
-        if (sessionData && sessionData.user) {
-            this.currentUser = {
-                id: sessionData.user.id || '',
-                name: `${sessionData.user.firstName || ''} ${sessionData.user.lastName || ''}`.trim(),
-                email: sessionData.user.email || '',
-                phone: sessionData.user.phone || '',
-                department: sessionData.user.department || '',
-                employeeId: sessionData.user.employeeId || '',
-                status: sessionData.user.status || 'Active'
-            };
-            
-            // Load user's access history if available
-            const userHistory = JSON.parse(localStorage.getItem(`accessHistory_${this.currentUser.id}`) || '[]');
-            this.accessHistory = userHistory;
-            
-            // Load user's notifications
-            const userNotifications = JSON.parse(localStorage.getItem(`notifications_${this.currentUser.id}`) || '[]');
-            this.notifications = userNotifications.length > 0 ? userNotifications : this.getDefaultNotifications();
-        } else {
-            // No session found, redirect to login
-            window.location.href = 'login.html';
-        }
-        
+        // In a real application, this would load from an API
         console.log('User data loaded:', this.currentUser);
     }
 
@@ -1031,35 +905,6 @@ ${entry.reason ? `Reason: ${entry.reason}` : ''}`);
         // Generate a simple employee ID
         const timestamp = Date.now().toString().slice(-6);
         return `EMP${timestamp}`;
-    }
-
-    getDefaultNotifications() {
-        return [
-            {
-                id: 1,
-                title: 'Welcome to Smart Door Access',
-                message: 'Your account has been set up successfully. You can now access doors using face recognition.',
-                time: 'Just now',
-                read: false,
-                icon: 'fa-door-open'
-            },
-            {
-                id: 2,
-                title: 'Security Notice',
-                message: 'For your security, please ensure your profile information is up to date.',
-                time: '1 hour ago',
-                read: false,
-                icon: 'fa-shield-alt'
-            },
-            {
-                id: 3,
-                title: 'System Information',
-                message: 'Face recognition system is online and ready for use.',
-                time: '2 hours ago',
-                read: true,
-                icon: 'fa-info'
-            }
-        ];
     }
 
     // Theme Management
@@ -1547,115 +1392,7 @@ ${entry.reason ? `Reason: ${entry.reason}` : ''}`);
         
         this.showNotification('Email Sent', `Notification sent to ${this.emailSettings.email}`, 'success');
     }
-
-    logout() {
-        if (confirm('Are you sure you want to log out?')) {
-            // Clear session data
-            localStorage.removeItem('userSession');
-            sessionStorage.removeItem('userSession');
-            
-            // Log logout activity
-            const activities = JSON.parse(localStorage.getItem('loginActivities') || '[]');
-            activities.unshift({
-                type: 'logout',
-                timestamp: new Date(),
-                userId: this.currentUser?.id,
-                success: true,
-                reason: 'User logout'
-            });
-            localStorage.setItem('loginActivities', JSON.stringify(activities.slice(0, 50)));
-            
-            // Redirect to login
-            window.location.href = 'login.html';
-        }
-    }
-    
-    // Face Recognition Helper Functions
-    showFaceRecognitionInstructions() {
-        const instructions = document.querySelector('.access-info-card .instructions-list');
-        if (instructions) {
-            instructions.innerHTML = `
-                <li>✅ Camera is now active and ready</li>
-                <li>🎯 Position your face clearly in the center of the camera view</li>
-                <li>💡 Ensure good lighting on your face</li>
-                <li>👀 Look directly at the camera with a neutral expression</li>
-                <li>📸 Click "Capture & Access" when ready</li>
-                <li>⏱️ Wait for face recognition analysis</li>
-                <li>🚪 Door will unlock automatically if recognized</li>
-            `;
-        }
-    }
-    
-    async registerUserFaceData(userId, userInfo) {
-        try {
-            if (window.faceRecognitionSystem) {
-                // For demo purposes, register simulated face data
-                const result = await window.faceRecognitionSystem.simulateFaceRegistration(userId, userInfo);
-                console.log('Face data registered:', result);
-                return result;
-            }
-        } catch (error) {
-            console.error('Face registration error:', error);
-        }
-        return null;
-    }
-    
-    simulateDoorUnlock() {
-        // Simulate door unlock animation/sound
-        this.showNotification('Door Unlocked', 'Access granted! Door is now open.', 'success');
-        
-        // Simulate door auto-lock after 5 seconds
-        setTimeout(() => {
-            this.showNotification('Door Locked', 'Door has been automatically locked.', 'info');
-        }, 5000);
-    }
-    
-    getFaceRecognitionStats() {
-        if (window.faceRecognitionSystem) {
-            return window.faceRecognitionSystem.getFaceRecognitionStats();
-        }
-        return {
-            totalUsers: 0,
-            totalEvents: 0,
-            todayEvents: 0,
-            successfulToday: 0,
-            failedToday: 0,
-            averageConfidence: 0,
-            lastRecognition: null
-        };
-    }
 }
-
-// Global functions
-function logout() {
-    if (typeof userPortal !== 'undefined' && userPortal.logout) {
-        userPortal.logout();
-    } else {
-        // Fallback logout if userPortal is not available
-        if (confirm('Are you sure you want to log out?')) {
-            localStorage.removeItem('userSession');
-            sessionStorage.removeItem('userSession');
-            window.location.href = 'login.html';
-        }
-    }
-}
-
-// Initialize user portal when DOM is loaded
-const userPortal = new UserPortal();
-
-// Prevent navigation away from dashboard without proper logout
-window.addEventListener('beforeunload', (e) => {
-    const sessionData = JSON.parse(
-        localStorage.getItem('userSession') || 
-        sessionStorage.getItem('userSession') || 
-        'null'
-    );
-    
-    if (sessionData && sessionData.user && window.location.pathname.includes('user.html')) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-});
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -1675,273 +1412,3 @@ window.addEventListener('beforeunload', () => {
         window.userPortal.stopCamera();
     }
 });
-
-// Global photo upload functions
-let selectedPhotoFile = null;
-
-function triggerPhotoUpload() {
-    document.getElementById('photoUpload').click();
-}
-
-function handlePhotoUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file (JPG, PNG, GIF)');
-            return;
-        }
-        
-        // Validate file size (5MB limit)
-        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-        if (file.size > maxSize) {
-            alert('File size must be less than 5MB');
-            return;
-        }
-        
-        selectedPhotoFile = file;
-        showPhotoUploadModal();
-        previewPhoto({ target: { files: [file] } });
-    }
-}
-
-function showPhotoUploadModal() {
-    const modal = document.getElementById('photoUploadModal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Setup drag and drop
-        const uploadArea = document.getElementById('photoUploadArea');
-        if (uploadArea) {
-            setupDragAndDrop(uploadArea);
-        }
-    }
-}
-
-function closePhotoUploadModal() {
-    const modal = document.getElementById('photoUploadModal');
-    if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        resetPhotoUpload();
-    }
-}
-
-function resetPhotoUpload() {
-    selectedPhotoFile = null;
-    const previewContainer = document.getElementById('photoPreviewContainer');
-    const uploadArea = document.getElementById('photoUploadArea');
-    const saveBtn = document.getElementById('savePhotoBtn');
-    const fileInput = document.getElementById('photoFileInput');
-    
-    if (previewContainer) previewContainer.style.display = 'none';
-    if (uploadArea) uploadArea.style.display = 'flex';
-    if (saveBtn) saveBtn.disabled = true;
-    if (fileInput) fileInput.value = '';
-}
-
-function previewPhoto(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const previewContainer = document.getElementById('photoPreviewContainer');
-        const previewImage = document.getElementById('photoPreviewImage');
-        const uploadArea = document.getElementById('photoUploadArea');
-        const saveBtn = document.getElementById('savePhotoBtn');
-        
-        // Update preview image
-        if (previewImage) {
-            previewImage.src = e.target.result;
-        }
-        
-        // Show preview container and hide upload area
-        if (previewContainer) previewContainer.style.display = 'block';
-        if (uploadArea) uploadArea.style.display = 'none';
-        if (saveBtn) saveBtn.disabled = false;
-        
-        // Update file info
-        updatePhotoInfo(file);
-    };
-    reader.readAsDataURL(file);
-}
-
-function updatePhotoInfo(file) {
-    const fileName = document.getElementById('photoFileName');
-    const fileSize = document.getElementById('photoFileSize');
-    const dimensions = document.getElementById('photoDimensions');
-    
-    if (fileName) fileName.textContent = file.name;
-    if (fileSize) fileSize.textContent = formatFileSize(file.size);
-    
-    // Get image dimensions
-    const img = new Image();
-    img.onload = function() {
-        if (dimensions) {
-            dimensions.textContent = `${this.width} × ${this.height} pixels`;
-        }
-    };
-    img.src = URL.createObjectURL(file);
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function setupDragAndDrop(uploadArea) {
-    const fileInput = document.getElementById('photoFileInput');
-    
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
-    
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-    });
-    
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type.startsWith('image/')) {
-                fileInput.files = files;
-                selectedPhotoFile = file;
-                previewPhoto({ target: { files: [file] } });
-            } else {
-                alert('Please drop an image file (JPG, PNG, GIF)');
-            }
-        }
-    });
-}
-
-function saveProfilePhoto() {
-    if (!selectedPhotoFile) {
-        alert('No photo selected');
-        return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const photoData = e.target.result;
-        
-        // Save to localStorage
-        const userPortal = window.userPortal;
-        if (userPortal && userPortal.currentUser) {
-            const photoKey = `profile_photo_${userPortal.currentUser.id || 'default'}`;
-            localStorage.setItem(photoKey, photoData);
-            
-            // Update profile avatar in the UI
-            updateProfileAvatar(photoData);
-            
-            // Show success message
-            showNotification('Profile photo updated successfully!', 'success');
-            
-            // Close modal
-            closePhotoUploadModal();
-            
-            // Show remove photo button
-            const removeBtn = document.getElementById('removePhotoBtn');
-            if (removeBtn) removeBtn.style.display = 'inline-flex';
-        }
-    };
-    reader.readAsDataURL(selectedPhotoFile);
-}
-
-function removeProfilePhoto() {
-    if (confirm('Are you sure you want to remove your profile photo?')) {
-        const userPortal = window.userPortal;
-        if (userPortal && userPortal.currentUser) {
-            const photoKey = `profile_photo_${userPortal.currentUser.id || 'default'}`;
-            localStorage.removeItem(photoKey);
-            
-            // Reset profile avatar to default
-            updateProfileAvatar(null);
-            
-            // Show success message
-            showNotification('Profile photo removed successfully!', 'success');
-            
-            // Hide remove photo button
-            const removeBtn = document.getElementById('removePhotoBtn');
-            if (removeBtn) removeBtn.style.display = 'none';
-        }
-    }
-}
-
-function updateProfileAvatar(photoData) {
-    const avatars = document.querySelectorAll('#profileAvatar, #userAvatar');
-    
-    avatars.forEach(avatar => {
-        if (photoData) {
-            // Set background image
-            avatar.style.backgroundImage = `url(${photoData})`;
-            avatar.style.backgroundSize = 'cover';
-            avatar.style.backgroundPosition = 'center';
-            avatar.style.backgroundRepeat = 'no-repeat';
-            
-            // Hide the default icon
-            const icon = avatar.querySelector('i');
-            if (icon) icon.style.display = 'none';
-        } else {
-            // Reset to default
-            avatar.style.backgroundImage = 'none';
-            
-            // Show the default icon
-            const icon = avatar.querySelector('i');
-            if (icon) icon.style.display = 'block';
-        }
-    });
-}
-
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-            <span>${message}</span>
-        </div>
-        <button class="notification-close" onclick="this.parentElement.remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // Add to document
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
-}
-
-// Load profile photo on page load
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const userPortal = window.userPortal;
-        if (userPortal && userPortal.currentUser) {
-            const photoKey = `profile_photo_${userPortal.currentUser.id || 'default'}`;
-            const savedPhoto = localStorage.getItem(photoKey);
-            
-            if (savedPhoto) {
-                updateProfileAvatar(savedPhoto);
-                const removeBtn = document.getElementById('removePhotoBtn');
-                if (removeBtn) removeBtn.style.display = 'inline-flex';
-            }
-        }
-    }, 1000);
-});
-

@@ -1,794 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Smart Door Access System</title>
-    <link rel="stylesheet" href="user-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: var(--spacing-lg);
-        }
-
-        .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-2xl);
-            padding: var(--spacing-2xl);
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .auth-logo {
-            font-size: 3rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .auth-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .auth-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: var(--spacing-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            transition: var(--transition-fast);
-            background: var(--white);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .form-input.error {
-            border-color: var(--danger-color);
-        }
-
-        .form-error {
-            color: var(--danger-color);
-            font-size: 0.875rem;
-            margin-top: var(--spacing-xs);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-md);
-        }
-
-        .password-field {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: var(--spacing-md);
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-sm);
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin: 0;
-            margin-top: 0.2rem;
-        }
-
-        .checkbox-group label {
-            margin: 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .checkbox-group a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .checkbox-group a:hover {
-            text-decoration: underline;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: var(--spacing-md);
-            background: var(--primary-gradient);
-            color: var(--white);
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .auth-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .auth-links {
-            text-align: center;
-        }
-
-        .auth-links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--white);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .success-message {
-            background: rgba(5, 150, 105, 0.1);
-            border: 1px solid rgba(5, 150, 105, 0.3);
-            color: var(--success-color);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-lg);
-            display: none;
-        }
-
-        .error-message {
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            color: var(--danger-color);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--spacing-lg);
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .auth-container {
-                padding: var(--spacing-md);
-                min-height: 100vh;
-            }
-
-            .auth-card {
-                padding: var(--spacing-lg);
-                max-width: 100%;
-                margin: 0;
-                border-radius: var(--radius-lg);
-            }
-
-            .auth-logo {
-                font-size: 2.5rem;
-            }
-
-            .auth-title {
-                font-size: 1.75rem;
-            }
-
-            .auth-subtitle {
-                font-size: 0.9rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .form-group {
-                margin-bottom: var(--spacing-md);
-            }
-
-            .form-input {
-                padding: var(--spacing-sm);
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-
-            .auth-btn {
-                padding: var(--spacing-md);
-                font-size: 1rem;
-            }
-
-            .checkbox-group {
-                align-items: flex-start;
-            }
-
-            .checkbox-group label {
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: var(--spacing-sm);
-            }
-
-            .auth-card {
-                padding: var(--spacing-md);
-            }
-
-            .auth-logo {
-                font-size: 2rem;
-            }
-
-            .auth-title {
-                font-size: 1.5rem;
-            }
-
-            .form-input {
-                padding: 12px;
-            }
-        }
-
-        /* Touch-friendly improvements */
-        @media (hover: none) and (pointer: coarse) {
-            .auth-btn {
-                min-height: 44px;
-            }
-
-            .password-toggle {
-                min-width: 44px;
-                min-height: 44px;
-                padding: var(--spacing-sm);
-            }
-
-            .checkbox-group input[type="checkbox"] {
-                min-width: 20px;
-                min-height: 20px;
-            }
-        }
-
-        /* Focus improvements */
-        .form-input:focus,
-        .auth-btn:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
-        }
-
-        /* Loading state improvements */
-        .auth-btn.loading {
-            position: relative;
-            color: transparent;
-        }
-
-        .auth-btn.loading .loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - IoT Door Opener</title>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="user-styles.css">
+  
+  <style>
+    .register-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .auth-card {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-door-open"></i>
-                </div>
-                <h1 class="auth-title">Create Account</h1>
-                <p class="auth-subtitle">Join the Smart Door Access System</p>
-            </div>
-
-            <div class="success-message" id="successMessage">
-                <i class="fas fa-check-circle"></i>
-                Registration successful! Redirecting to login...
-            </div>
-
-            <div class="error-message" id="errorMessage"></div>
-
-            <form id="registrationForm" novalidate>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First Name *</label>
-                        <input type="text" id="firstName" name="firstName" class="form-input" required>
-                        <div class="form-error" id="firstNameError"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name *</label>
-                        <input type="text" id="lastName" name="lastName" class="form-input" required>
-                        <div class="form-error" id="lastNameError"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" class="form-input" required>
-                    <div class="form-error" id="emailError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="form-input">
-                    <div class="form-error" id="phoneError"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="department">Department</label>
-                    <select id="department" name="department" class="form-input">
-                        <option value="">Select Department</option>
-                        <option value="IT">Information Technology</option>
-                        <option value="HR">Human Resources</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Operations">Operations</option>
-                        <option value="Security">Security</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="registrationNumber">Registration Number *</label>
-                    <input type="text" id="registrationNumber" name="registrationNumber" class="form-input" required placeholder="Enter your registration number">
-                    <div class="form-error" id="registrationNumberError"></div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="password">Password *</label>
-                        <div class="password-field">
-                            <input type="password" id="password" name="password" class="form-input" required>
-                            <button type="button" class="password-toggle" onclick="togglePassword('password')" title="Toggle password visibility" aria-label="Toggle password visibility">
-                                <i class="fas fa-eye" id="passwordIcon"></i>
-                            </button>
-                        </div>
-                        <div class="form-error" id="passwordError"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password *</label>
-                        <div class="password-field">
-                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
-                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" title="Toggle password visibility" aria-label="Toggle confirm password visibility">
-                                <i class="fas fa-eye" id="confirmPasswordIcon"></i>
-                            </button>
-                        </div>
-                        <div class="form-error" id="confirmPasswordError"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">
-                            I agree to the <a href="#" target="_blank">Terms of Service</a> 
-                            and <a href="#" target="_blank">Privacy Policy</a> *
-                        </label>
-                    </div>
-                    <div class="form-error" id="termsError"></div>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="newsletter" name="newsletter">
-                        <label for="newsletter">
-                            I would like to receive updates and notifications about the system
-                        </label>
-                    </div>
-                </div>
-
-                <button type="submit" class="auth-btn" id="submitBtn">
-                    <span id="submitText">Create Account</span>
-                    <div class="loading-spinner" id="loadingSpinner"></div>
-                </button>
-            </form>
-
-            <div class="auth-links">
-                <p>Already have an account? <a href="login.html">Sign In</a></p>
-            </div>
+  <div class="register-container">
+    <div class="auth-card">
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="bi bi-house-door-fill display-3 text-info"></i>
         </div>
+        <h2>Create Account</h2>
+        <p class="text-gray-200">Join the IoT Door Opener System</p>
+      </div>
+
+      <form id="registerForm">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="fullName" class="form-control" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Create a password" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="termsCheck" required>
+          <label class="form-check-label" for="termsCheck">I agree to the terms and conditions</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">
+          <i class="bi bi-person-plus me-2"></i>Create Account
+        </button>
+      </form>
+
+      <div class="text-center mt-4">
+        <p class="text-gray-200">
+          Already have an account? <a href="login.html" class="text-info">Sign in here</a>
+        </p>
+        <a href="index.html" class="btn btn-outline mt-3">
+          <i class="bi bi-arrow-left me-1"></i> Back to Home
+        </a>
+      </div>
     </div>
+  </div>
 
-    <script>
-        class Registration {
-            constructor() {
-                this.form = document.getElementById('registrationForm');
-                this.submitBtn = document.getElementById('submitBtn');
-                this.init();
-            }
-
-            init() {
-                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                this.setupValidation();
-            }
-
-            setupValidation() {
-                const inputs = this.form.querySelectorAll('input');
-                inputs.forEach(input => {
-                    input.addEventListener('blur', () => this.validateField(input));
-                    input.addEventListener('input', () => this.clearError(input));
-                });
-            }
-
-            validateField(field) {
-                const value = field.value.trim();
-                let isValid = true;
-                let errorMessage = '';
-
-                switch (field.name) {
-                    case 'firstName':
-                    case 'lastName':
-                        if (!value) {
-                            errorMessage = 'This field is required';
-                            isValid = false;
-                        } else if (value.length < 2) {
-                            errorMessage = 'Must be at least 2 characters';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'email':
-                        if (!value) {
-                            errorMessage = 'Email is required';
-                            isValid = false;
-                        } else if (!this.isValidEmail(value)) {
-                            errorMessage = 'Please enter a valid email address';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'phone':
-                        if (value && !this.isValidPhone(value)) {
-                            errorMessage = 'Please enter a valid phone number';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'registrationNumber':
-                        if (!value) {
-                            errorMessage = 'Registration number is required';
-                            isValid = false;
-                        } else if (value.length < 3) {
-                            errorMessage = 'Registration number must be at least 3 characters';
-                            isValid = false;
-                        } else if (!/^[A-Za-z0-9-/]+$/.test(value)) {
-                            errorMessage = 'Registration number can only contain letters, numbers, hyphens, and forward slashes';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'password':
-                        if (!value) {
-                            errorMessage = 'Password is required';
-                            isValid = false;
-                        } else if (value.length < 8) {
-                            errorMessage = 'Password must be at least 8 characters';
-                            isValid = false;
-                        } else if (!this.isStrongPassword(value)) {
-                            errorMessage = 'Password must contain uppercase, lowercase, number, and special character';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'confirmPassword':
-                        const password = document.getElementById('password').value;
-                        if (!value) {
-                            errorMessage = 'Please confirm your password';
-                            isValid = false;
-                        } else if (value !== password) {
-                            errorMessage = 'Passwords do not match';
-                            isValid = false;
-                        }
-                        break;
-
-                    case 'terms':
-                        if (!field.checked) {
-                            errorMessage = 'You must agree to the terms and conditions';
-                            isValid = false;
-                        }
-                        break;
-                }
-
-                this.showError(field, errorMessage);
-                return isValid;
-            }
-
-            validateForm() {
-                const requiredFields = this.form.querySelectorAll('input[required]');
-                let isValid = true;
-
-                requiredFields.forEach(field => {
-                    if (!this.validateField(field)) {
-                        isValid = false;
-                    }
-                });
-
-                return isValid;
-            }
-
-            isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-
-            isValidPhone(phone) {
-                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-                return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
-            }
-
-            isStrongPassword(password) {
-                const hasUpper = /[A-Z]/.test(password);
-                const hasLower = /[a-z]/.test(password);
-                const hasNumber = /\d/.test(password);
-                const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-                return hasUpper && hasLower && hasNumber && hasSpecial;
-            }
-
-            showError(field, message) {
-                const errorElement = document.getElementById(field.name + 'Error');
-                if (errorElement) {
-                    errorElement.textContent = message;
-                    field.classList.toggle('error', !!message);
-                }
-            }
-
-            clearError(field) {
-                const errorElement = document.getElementById(field.name + 'Error');
-                if (errorElement) {
-                    errorElement.textContent = '';
-                    field.classList.remove('error');
-                }
-            }
-
-            showMessage(type, message) {
-                const successEl = document.getElementById('successMessage');
-                const errorEl = document.getElementById('errorMessage');
-                
-                successEl.style.display = 'none';
-                errorEl.style.display = 'none';
-
-                if (type === 'success') {
-                    successEl.style.display = 'block';
-                    successEl.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-                } else {
-                    errorEl.style.display = 'block';
-                    errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-                }
-            }
-
-            async handleSubmit(e) {
-                e.preventDefault();
-
-                if (!this.validateForm()) {
-                    this.showMessage('error', 'Please correct the errors above and try again.');
-                    return;
-                }
-
-                this.setLoading(true);
-
-                try {
-                    const formData = new FormData(this.form);
-                    const userData = {
-                        firstName: formData.get('firstName'),
-                        lastName: formData.get('lastName'),
-                        email: formData.get('email'),
-                        phone: formData.get('phone'),
-                        department: formData.get('department'),
-                        registrationNumber: formData.get('registrationNumber'),
-                        password: formData.get('password'),
-                        newsletter: formData.get('newsletter') === 'on',
-                        registrationDate: new Date().toISOString(),
-                        employeeId: this.generateEmployeeId(),
-                        status: 'Pending Verification'
-                    };
-
-                    // Simulate API call
-                    await this.simulateRegistration(userData);
-
-                    // Store user data (in real app, this would be handled by backend)
-                    this.storeUserData(userData);
-
-                    this.showMessage('success', 'Registration successful! Redirecting to login...');
-                    
-                    // Redirect to login page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-
-                } catch (error) {
-                    this.showMessage('error', error.message || 'Registration failed. Please try again.');
-                } finally {
-                    this.setLoading(false);
-                }
-            }
-
-            async simulateRegistration(userData) {
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Check for existing email (simulate)
-                const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                if (existingUsers.find(user => user.email === userData.email)) {
-                    throw new Error('An account with this email already exists.');
-                }
-
-                // Simulate random failures
-                if (Math.random() < 0.1) {
-                    throw new Error('Server error. Please try again later.');
-                }
-
-                return { success: true };
-            }
-
-            storeUserData(userData) {
-                // Get existing users
-                const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                
-                // Add new user (remove password from stored data for security)
-                const { password, ...userWithoutPassword } = userData;
-                existingUsers.push({
-                    ...userWithoutPassword,
-                    id: Date.now().toString(),
-                    hashedPassword: this.hashPassword(password) // In real app, this would be done on backend
-                });
-                
-                // Store updated users
-                localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
-            }
-
-            hashPassword(password) {
-                // Simple hash for demo - in real app, use proper hashing on backend
-                let hash = 0;
-                for (let i = 0; i < password.length; i++) {
-                    const char = password.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // Convert to 32-bit integer
-                }
-                return hash.toString();
-            }
-
-            generateEmployeeId() {
-                const timestamp = Date.now().toString().slice(-6);
-                const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                return `EMP${timestamp}${random}`;
-            }
-
-            setLoading(loading) {
-                const submitText = document.getElementById('submitText');
-                const loadingSpinner = document.getElementById('loadingSpinner');
-                
-                if (loading) {
-                    this.submitBtn.classList.add('loading');
-                    submitText.style.display = 'none';
-                    loadingSpinner.style.display = 'block';
-                    this.submitBtn.disabled = true;
-                } else {
-                    this.submitBtn.classList.remove('loading');
-                    submitText.style.display = 'block';
-                    loadingSpinner.style.display = 'none';
-                    this.submitBtn.disabled = false;
-                }
-            }
-        }
-
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = document.getElementById(fieldId + 'Icon');
-            
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                field.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        // Initialize registration when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new Registration();
-            
-            // Add mobile-friendly enhancements
-            if ('ontouchstart' in window) {
-                document.body.classList.add('touch-device');
-            }
-            
-            // Improve form experience on mobile
-            const inputs = document.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                // Prevent zoom on iOS
-                if (input.type !== 'checkbox') {
-                    input.addEventListener('focus', () => {
-                        if (window.innerWidth < 768) {
-                            setTimeout(() => {
-                                input.scrollIntoView({
-                                    behavior: 'smooth',
-                                    block: 'center'
-                                });
-                            }, 300);
-                        }
-                    });
-                }
-            });
-            
-            // Handle form submission with Enter key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                    const form = e.target.closest('form');
-                    if (form) {
-                        e.preventDefault();
-                        const submitBtn = form.querySelector('button[type="submit"]');
-                        if (submitBtn && !submitBtn.disabled) {
-                            submitBtn.click();
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-    <script src="security-framework.js"></script>
-    <script src="theme-language.js"></script>
+  <script src="simple-core.js"></script>
 </body>
 </html>

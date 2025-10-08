@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - IoT Door Opener</title>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="user-styles.css">
+  
+  <style>
+    .admin-login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .auth-card {
+      max-width: 450px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .demo-info {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-login-container">
+    <div class="auth-card">
+      <a href="index.html" class="btn btn-outline mb-4">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+      
+      <div class="mb-4">
+        <i class="bi bi-shield-lock display-3 text-warning"></i>
+        <h2>Admin Login</h2>
+        <p class="text-gray-200">Access the dashboard to manage users and system settings.</p>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="mb-3">
+          <label for="adminUsername" class="form-label">Username</label>
+          <input type="text" id="adminUsername" name="username" class="form-control" placeholder="Enter admin username" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="adminPassword" class="form-label">Password</label>
+          <input type="password" id="adminPassword" name="password" class="form-control" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Login
+        </button>
+
+        <div id="adminLoginMessage" class="message mt-3"></div>
+      </form>
+
+      <div class="demo-info">
+        <h6 class="mb-2">
+          <i class="bi bi-info-circle me-2"></i> Demo Admin Login
+        </h6>
+        <p class="mb-1"><strong>Username:</strong> admin</p>
+        <p class="mb-0"><strong>Password:</strong> admin123</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="simple-core.js"></script>
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      const messageDiv = document.getElementById('adminLoginMessage');
+
+      if (handleAdminLogin(username, password)) {
+        messageDiv.innerHTML = '<span style="color: #10b981;">✅ Admin login successful! Redirecting...</span>';
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 1000);
+      } else {
+        messageDiv.innerHTML = '<span style="color: #dc2626;">❌ Invalid admin credentials. Try again.</span>';
+      }
+    });
+
+    const adminSession = getAdminSession();
+    if (adminSession) {
+      window.location.href = 'admin-dashboard.html';
+    }
+  </script>
+</body>
+</html>
