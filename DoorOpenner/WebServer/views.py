@@ -12,7 +12,7 @@ from rest_framework.response import Response
 # Create your views here.
 
 # api to the arduino board
-@api_view(['GET', 'DELETE','POST','PUT'])
+@api_view(['GET'])
 def user_images_api(request):
     images = ImagesAccess.objects.all()
     serializer = ImagesAcessSerializers(images , many=True ,context={'request':request})
