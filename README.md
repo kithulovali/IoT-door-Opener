@@ -1,6 +1,6 @@
 # 🚪 IoT Door Access System
 
-<<<<<<< HEAD
+
 ![server development cercle](https://github.com/kithulovali/IoT-door-Opener/blob/server/assets/Development.png)
 
 This above image is described by the algorithm bellow 
